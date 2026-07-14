@@ -47,11 +47,21 @@ function buildReducer(
 		}
 		case "select": {
 			if (getCategoryConfig(action.category).allowMultipleSelected) {
-				return state.map((option) =>
-					option.id === action.id
-						? { ...option, selected: !option.selected }
-						: option,
-				);
+				const target = state.find((option) => option.id === action.id);
+				const groupKey = target?.specs.accessoryType?.trim().toLowerCase();
+				return state.map((option) => {
+					if (option.id === action.id) {
+						return { ...option, selected: !option.selected };
+					}
+					if (
+						groupKey &&
+						option.category === action.category &&
+						option.specs.accessoryType?.trim().toLowerCase() === groupKey
+					) {
+						return { ...option, selected: false };
+					}
+					return option;
+				});
 			}
 			return state.map((option) =>
 				option.category === action.category

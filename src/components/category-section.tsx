@@ -30,6 +30,49 @@ export function CategorySection({ category }: CategorySectionProps) {
 		? categoryOptions.find((o) => o.id === editingId)
 		: undefined;
 
+	const groups: Map<string, ComponentOption[]> | null =
+		category.allowMultipleSelected ? new Map() : null;
+	if (groups) {
+		for (const option of categoryOptions) {
+			const groupLabel = option.specs.accessoryType?.trim() || "Sans type";
+			const group = groups.get(groupLabel);
+			if (group) {
+				group.push(option);
+			} else {
+				groups.set(groupLabel, [option]);
+			}
+		}
+	}
+
+	function renderOption(option: ComponentOption) {
+		return editingId === option.id ? (
+			<OptionForm
+				key={option.id}
+				category={category}
+				initial={option}
+				onSubmit={(data) => {
+					updateOption(option.id, data);
+					setEditingId(null);
+				}}
+				onCancel={() => setEditingId(null)}
+			/>
+		) : (
+			<OptionCard
+				key={option.id}
+				option={option}
+				specFields={category.specFields}
+				multiple={category.allowMultipleSelected}
+				onSelect={() => selectOption(category.id, option.id)}
+				onEdit={() => {
+					setIsAdding(false);
+					setEditingId(option.id);
+				}}
+				onDuplicate={() => duplicateOption(option.id)}
+				onDelete={() => deleteOption(option.id)}
+			/>
+		);
+	}
+
 	return (
 		<section className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
 			<div className="flex items-center justify-between">
@@ -58,37 +101,25 @@ export function CategorySection({ category }: CategorySectionProps) {
 				</button>
 			</div>
 
-			{categoryOptions.length > 0 && (
-				<div className="mt-4 space-y-3">
-					{categoryOptions.map((option) =>
-						editingId === option.id ? (
-							<OptionForm
-								key={option.id}
-								category={category}
-								initial={option}
-								onSubmit={(data) => {
-									updateOption(option.id, data);
-									setEditingId(null);
-								}}
-								onCancel={() => setEditingId(null)}
-							/>
-						) : (
-							<OptionCard
-								key={option.id}
-								option={option}
-								specFields={category.specFields}
-								multiple={category.allowMultipleSelected}
-								onSelect={() => selectOption(category.id, option.id)}
-								onEdit={() => {
-									setIsAdding(false);
-									setEditingId(option.id);
-								}}
-								onDuplicate={() => duplicateOption(option.id)}
-								onDelete={() => deleteOption(option.id)}
-							/>
-						),
-					)}
+			{groups ? (
+				<div className="mt-4 space-y-4">
+					{[...groups.entries()].map(([groupLabel, groupOptions]) => (
+						<div key={groupLabel}>
+							<h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+								{groupLabel}
+							</h3>
+							<div className="space-y-3">
+								{groupOptions.map((option) => renderOption(option))}
+							</div>
+						</div>
+					))}
 				</div>
+			) : (
+				categoryOptions.length > 0 && (
+					<div className="mt-4 space-y-3">
+						{categoryOptions.map((option) => renderOption(option))}
+					</div>
+				)
 			)}
 
 			{isAdding && !editingOption && (

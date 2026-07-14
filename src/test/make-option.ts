@@ -16,6 +16,7 @@ export function makeOption(
 		selected: true,
 		purchased: false,
 		specs: {},
+		priceHistory: [],
 		...overrides,
 	};
 }

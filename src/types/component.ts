@@ -39,6 +39,11 @@ export interface ComponentSpecs {
 	storageType?: "NVMe M.2" | "SATA SSD" | "HDD";
 }
 
+export interface PricePoint {
+	date: string;
+	price: number;
+}
+
 export interface ComponentOption {
 	id: string;
 	category: Category;
@@ -51,6 +56,10 @@ export interface ComponentOption {
 	purchased: boolean;
 	notes?: string;
 	specs: ComponentSpecs;
+	priceHistory: PricePoint[];
 }
 
-export type NewComponentOption = Omit<ComponentOption, "id" | "updatedAt">;
+export type NewComponentOption = Omit<
+	ComponentOption,
+	"id" | "updatedAt" | "priceHistory"
+>;

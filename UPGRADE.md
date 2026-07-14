@@ -24,7 +24,7 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 - [x] **Budget cible** : afficher un objectif de budget et le reste à dépenser, en plus du total actuel.
 - [x] **Statut "acheté"** : distinguer "sélectionné pour comparaison" de "réellement acheté", pour suivre l'avancement des achats dans le temps.
-- [ ] **Historique de prix** : possibilité d'ajouter des points de prix dans le temps sur une même version (utile vu que tu regardes des graphiques d'historique Amazon/CamelCamelCamel) pour repérer une bonne affaire.
+- [x] **Historique de prix** : possibilité d'ajouter des points de prix dans le temps sur une même version (utile vu que tu regardes des graphiques d'historique Amazon/CamelCamelCamel) pour repérer une bonne affaire.
 - [ ] **Image/miniature** : un champ URL d'image par version aiderait à identifier visuellement les options quand il y en a beaucoup.
 - [ ] **Tri / filtre** : trier les versions par prix, filtrer sur "sélectionné uniquement", ou rechercher par nom dans les catégories qui ont beaucoup d'entrées.
 - [ ] **Vue résumé/export** : une vue lecture seule (ou export PDF/image) du build final avec le total, utile pour partager ou demander un avis.

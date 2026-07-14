@@ -31,10 +31,27 @@ function defaultPurchasedFalse(raw: RawOption): RawOption {
 	return { ...raw, purchased: false };
 }
 
+// "priceHistory" is a new required field; seed it with the currently known price
+// (dated at the option's last known update) instead of starting it empty.
+function defaultPriceHistory(raw: RawOption): RawOption {
+	if ("priceHistory" in raw) return raw;
+	const price = typeof raw.price === "number" ? raw.price : 0;
+	const salePrice = typeof raw.salePrice === "number" ? raw.salePrice : price;
+	const date =
+		typeof raw.updatedAt === "string"
+			? raw.updatedAt
+			: new Date().toISOString().slice(0, 10);
+	return {
+		...raw,
+		priceHistory: [{ date, price: Math.min(price, salePrice) }],
+	};
+}
+
 const MIGRATIONS: Array<(raw: RawOption) => RawOption> = [
 	renameDateAddedToUpdatedAt,
 	normalizeArraySpecs,
 	defaultPurchasedFalse,
+	defaultPriceHistory,
 ];
 
 // Each step only touches shapes it recognizes as outdated, so re-running all of them is idempotent.

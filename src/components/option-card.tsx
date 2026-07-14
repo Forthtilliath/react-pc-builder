@@ -1,4 +1,13 @@
-import { Copy, ExternalLink, Pencil, ShoppingCart, Trash2 } from "lucide-react";
+import {
+	ChevronDown,
+	ChevronUp,
+	Copy,
+	ExternalLink,
+	Pencil,
+	ShoppingCart,
+	Trash2,
+} from "lucide-react";
+import { useState } from "react";
 import type { SpecFieldConfig } from "../data/categories.ts";
 import type { ComponentOption } from "../types/component.ts";
 import {
@@ -35,8 +44,17 @@ export function OptionCard({
 	onDelete,
 	onTogglePurchased,
 }: OptionCardProps) {
+	const [showHistory, setShowHistory] = useState(false);
 	const discountPercent = getDiscountPercent(option.price, option.salePrice);
 	const effectivePrice = getEffectivePrice(option);
+	const lowestPoint = option.priceHistory.reduce<
+		(typeof option.priceHistory)[number] | null
+	>(
+		(lowest, point) => (!lowest || point.price < lowest.price ? point : lowest),
+		null,
+	);
+	const isAboveLowest =
+		lowestPoint !== null && effectivePrice > lowestPoint.price;
 
 	return (
 		<div
@@ -137,8 +155,42 @@ export function OptionCard({
 							</>
 						)}
 					</div>
+					{isAboveLowest && lowestPoint && (
+						<p className="text-xs text-amber-400">
+							Plus bas vu : {formatPrice(lowestPoint.price)} (
+							{formatDate(lowestPoint.date)})
+						</p>
+					)}
 				</div>
 			</div>
+			{option.priceHistory.length > 1 && (
+				<div className="mt-2">
+					<button
+						type="button"
+						onClick={() => setShowHistory((prev) => !prev)}
+						className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200"
+					>
+						{showHistory ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+						Historique des prix ({option.priceHistory.length})
+					</button>
+					{showHistory && (
+						<ul className="mt-2 space-y-1 text-xs text-slate-400">
+							{[...option.priceHistory].reverse().map((point, index) => (
+								<li
+									// biome-ignore lint/suspicious/noArrayIndexKey: append-only history, order is stable per render
+									key={`${point.date}-${index}`}
+									className="flex justify-between gap-4"
+								>
+									<span>{formatDate(point.date)}</span>
+									<span className="text-slate-300">
+										{formatPrice(point.price)}
+									</span>
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
+			)}
 			{specFields.length > 0 && (
 				<dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-400 sm:grid-cols-3">
 					{specFields.map((field) => (

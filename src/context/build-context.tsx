@@ -12,10 +12,14 @@ import type {
 	ComponentOption,
 	NewComponentOption,
 } from "../types/component.ts";
+import { getEffectivePrice } from "../utils/format.ts";
 import { migrateOptions } from "../utils/migrate-options.ts";
 
 export type Action =
-	| { type: "add"; option: Omit<ComponentOption, "updatedAt"> }
+	| {
+			type: "add";
+			option: Omit<ComponentOption, "updatedAt" | "priceHistory">;
+	  }
 	| { type: "update"; id: string; patch: Partial<ComponentOption> }
 	| { type: "delete"; id: string }
 	| { type: "duplicate"; id: string; newId: string }
@@ -39,14 +43,32 @@ export function buildReducer(
 	action: Action,
 ): ComponentOption[] {
 	switch (action.type) {
-		case "add":
-			return [...state, { ...action.option, updatedAt: today() }];
+		case "add": {
+			const initialPrice = getEffectivePrice(action.option);
+			return [
+				...state,
+				{
+					...action.option,
+					updatedAt: today(),
+					priceHistory: [{ date: today(), price: initialPrice }],
+				},
+			];
+		}
 		case "update":
-			return state.map((option) =>
-				option.id === action.id
-					? { ...option, ...action.patch, updatedAt: today() }
-					: option,
-			);
+			return state.map((option) => {
+				if (option.id !== action.id) return option;
+				const updated = { ...option, ...action.patch };
+				const previousPrice = getEffectivePrice(option);
+				const newPrice = getEffectivePrice(updated);
+				return {
+					...updated,
+					updatedAt: today(),
+					priceHistory:
+						newPrice !== previousPrice
+							? [...option.priceHistory, { date: today(), price: newPrice }]
+							: option.priceHistory,
+				};
+			});
 		case "delete":
 			return state.filter((option) => option.id !== action.id);
 		case "duplicate": {
@@ -58,6 +80,7 @@ export function buildReducer(
 				name: `${original.name} (copie)`,
 				selected: false,
 				updatedAt: today(),
+				priceHistory: [{ date: today(), price: getEffectivePrice(original) }],
 			};
 			return [...state, copy];
 		}

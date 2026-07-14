@@ -71,6 +71,53 @@ describe("migrateOptions", () => {
 		expect(migrated?.purchased).toBe(true);
 	});
 
+	test("seeds priceHistory with the current price when missing", () => {
+		const [migrated] = migrateOptions([
+			{
+				id: "1",
+				name: "CPU",
+				updatedAt: "2026-03-01",
+				price: 300,
+				specs: {},
+			},
+		]);
+		expect(migrated?.priceHistory).toEqual([
+			{ date: "2026-03-01", price: 300 },
+		]);
+	});
+
+	test("seeds priceHistory using the lower of price/salePrice", () => {
+		const [migrated] = migrateOptions([
+			{
+				id: "1",
+				name: "CPU",
+				updatedAt: "2026-03-01",
+				price: 300,
+				salePrice: 250,
+				specs: {},
+			},
+		]);
+		expect(migrated?.priceHistory).toEqual([
+			{ date: "2026-03-01", price: 250 },
+		]);
+	});
+
+	test("leaves priceHistory untouched when already present", () => {
+		const [migrated] = migrateOptions([
+			{
+				id: "1",
+				name: "CPU",
+				updatedAt: "2026-03-01",
+				price: 300,
+				priceHistory: [{ date: "2020-01-01", price: 999 }],
+				specs: {},
+			},
+		]);
+		expect(migrated?.priceHistory).toEqual([
+			{ date: "2020-01-01", price: 999 },
+		]);
+	});
+
 	test("is idempotent when run twice on already-migrated data", () => {
 		const once = migrateOptions([
 			{ id: "1", name: "CPU", dateAdded: "2025-01-01", specs: {} },

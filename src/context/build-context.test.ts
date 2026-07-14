@@ -5,10 +5,16 @@ import { buildReducer } from "./build-context.tsx";
 const todayStr = () => new Date().toISOString().slice(0, 10);
 
 describe("buildReducer", () => {
-	test("add appends the option, stamping updatedAt with today's date", () => {
-		const option = makeOption("cpu", { updatedAt: "2020-01-01" });
+	test("add appends the option, stamping updatedAt and seeding priceHistory with today's date", () => {
+		const option = makeOption("cpu", { updatedAt: "2020-01-01", price: 100 });
 		const state = buildReducer([], { type: "add", option });
-		expect(state).toEqual([{ ...option, updatedAt: todayStr() }]);
+		expect(state).toEqual([
+			{
+				...option,
+				updatedAt: todayStr(),
+				priceHistory: [{ date: todayStr(), price: 100 }],
+			},
+		]);
 	});
 
 	test("update merges the patch into the matching option", () => {
@@ -19,6 +25,37 @@ describe("buildReducer", () => {
 			patch: { price: 150 },
 		});
 		expect(state[0]?.price).toBe(150);
+	});
+
+	test("update appends a price history point when the effective price changes", () => {
+		const option = makeOption("cpu", {
+			price: 100,
+			priceHistory: [{ date: "2020-01-01", price: 100 }],
+		});
+		const state = buildReducer([option], {
+			type: "update",
+			id: option.id,
+			patch: { price: 150 },
+		});
+		expect(state[0]?.priceHistory).toEqual([
+			{ date: "2020-01-01", price: 100 },
+			{ date: todayStr(), price: 150 },
+		]);
+	});
+
+	test("update does not append a price history point when the effective price is unchanged", () => {
+		const option = makeOption("cpu", {
+			price: 100,
+			priceHistory: [{ date: "2020-01-01", price: 100 }],
+		});
+		const state = buildReducer([option], {
+			type: "update",
+			id: option.id,
+			patch: { notes: "still the same price" },
+		});
+		expect(state[0]?.priceHistory).toEqual([
+			{ date: "2020-01-01", price: 100 },
+		]);
 	});
 
 	test("update refreshes updatedAt to today's date", () => {

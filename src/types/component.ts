@@ -51,6 +51,7 @@ export interface ComponentOption {
 	price: number;
 	salePrice?: number;
 	url?: string;
+	imageUrl?: string;
 	updatedAt: string;
 	selected: boolean;
 	purchased: boolean;

@@ -72,6 +72,13 @@ export function OptionCard({
 						onChange={onSelect}
 						className="mt-1 accent-emerald-500"
 					/>
+					{option.imageUrl && (
+						<img
+							src={option.imageUrl}
+							alt=""
+							className="h-12 w-12 shrink-0 rounded object-cover"
+						/>
+					)}
 					<div>
 						<div className="flex items-center gap-2">
 							<p className="font-medium text-slate-100">{option.name}</p>

@@ -1,5 +1,9 @@
 import { type FormEvent, useState } from "react";
-import type { CategoryConfig, SpecFieldConfig } from "../data/categories.ts";
+import type {
+	CategoryConfig,
+	SpecFieldConfig,
+	SpecFieldKey,
+} from "../data/categories.ts";
 import type {
 	ComponentOption,
 	ComponentSpecs,
@@ -33,29 +37,34 @@ function specsToFormValues(
 	return values;
 }
 
+function parseSpecFieldValue(
+	field: SpecFieldConfig,
+	raw: string,
+): string | number | string[] {
+	switch (field.type) {
+		case "number":
+			return Number(raw);
+		case "tags":
+			return raw
+				.split(",")
+				.map((part) => part.trim())
+				.filter(Boolean);
+		default:
+			return raw;
+	}
+}
+
 function formValuesToSpecs(
 	fields: SpecFieldConfig[],
 	values: SpecFormValues,
 ): ComponentSpecs {
-	const specs: ComponentSpecs = {};
+	const specs: Partial<Record<SpecFieldKey, string | number | string[]>> = {};
 	for (const field of fields) {
 		const raw = values[field.key]?.trim();
 		if (!raw) continue;
-		if (field.type === "number") {
-			// biome-ignore lint/suspicious/noExplicitAny: dynamic spec key assignment
-			(specs as any)[field.key] = Number(raw);
-		} else if (field.type === "tags") {
-			// biome-ignore lint/suspicious/noExplicitAny: dynamic spec key assignment
-			(specs as any)[field.key] = raw
-				.split(",")
-				.map((part) => part.trim())
-				.filter(Boolean);
-		} else {
-			// biome-ignore lint/suspicious/noExplicitAny: dynamic spec key assignment
-			(specs as any)[field.key] = raw;
-		}
+		specs[field.key] = parseSpecFieldValue(field, raw);
 	}
-	return specs;
+	return specs as ComponentSpecs;
 }
 
 export function OptionForm({

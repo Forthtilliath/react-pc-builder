@@ -32,8 +32,8 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 ## Qualité de code
 
-- [ ] **Tests unitaires** : `compatibility.ts` (règles de compat) et le reducer de `build-context.tsx` (surtout la logique de sélection par groupe qu'on vient d'ajouter) sont de la vraie logique métier sans aucun test — un changement futur pourrait casser silencieusement une règle.
-- [ ] **Typage des specs dynamiques** : `option-form.tsx` utilise plusieurs `as any` pour assigner les valeurs de specs dynamiquement (`formValuesToSpecs`). Fonctionnel mais pas typé strictement ; un mapping par type de champ éviterait ces échappatoires si le modèle continue de grossir.
+- [x] **Tests unitaires** : `compatibility.ts` (règles de compat) et le reducer de `build-context.tsx` (surtout la logique de sélection par groupe qu'on vient d'ajouter) sont de la vraie logique métier sans aucun test — un changement futur pourrait casser silencieusement une règle.
+- [x] **Typage des specs dynamiques** : `option-form.tsx` utilise plusieurs `as any` pour assigner les valeurs de specs dynamiquement (`formValuesToSpecs`). Fonctionnel mais pas typé strictement ; un mapping par type de champ éviterait ces échappatoires si le modèle continue de grossir.
 
 ## Confort d'usage
 

@@ -105,7 +105,7 @@ export function OptionForm({
 		>
 			<div className="grid gap-3 sm:grid-cols-2">
 				<label className="text-sm text-slate-300">
-					Nom
+					<span className="block min-h-10">Nom</span>
 					<input
 						required
 						value={name}
@@ -114,7 +114,7 @@ export function OptionForm({
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
-					Lien
+					<span className="block min-h-10">Lien</span>
 					<input
 						type="url"
 						value={url}
@@ -124,7 +124,7 @@ export function OptionForm({
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
-					Prix (€)
+					<span className="block min-h-10">Prix (€)</span>
 					<input
 						required
 						type="number"
@@ -136,8 +136,10 @@ export function OptionForm({
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
-					Prix soldé (€){" "}
-					<span className="text-slate-500">— si promo en cours</span>
+					<span className="block min-h-10">
+						Prix soldé (€){" "}
+						<span className="text-slate-500">— si promo en cours</span>
+					</span>
 					<input
 						type="number"
 						min="0"
@@ -159,7 +161,7 @@ export function OptionForm({
 								htmlFor={fieldId}
 								className="text-sm text-slate-300"
 							>
-								{field.label}
+								<span className="block min-h-10">{field.label}</span>
 								{field.type === "select" ? (
 									<select
 										id={fieldId}

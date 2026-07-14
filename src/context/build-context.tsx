@@ -12,6 +12,7 @@ import type {
 	ComponentOption,
 	NewComponentOption,
 } from "../types/component.ts";
+import { migrateOptions } from "../utils/migrate-options.ts";
 
 export type Action =
 	| { type: "add"; option: Omit<ComponentOption, "updatedAt"> }
@@ -98,6 +99,7 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 	const [options, setOptions] = useLocalStorage<ComponentOption[]>(
 		"pc-builder:options",
 		[],
+		migrateOptions,
 	);
 	const [budget, setBudget] = useLocalStorage<number | null>(
 		"pc-builder:budget",

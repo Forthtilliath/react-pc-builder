@@ -2,6 +2,7 @@ import { Download, Upload } from "lucide-react";
 import { type ChangeEvent, useRef } from "react";
 import { useBuild } from "../context/build-context.tsx";
 import type { ComponentOption } from "../types/component.ts";
+import { migrateOptions } from "../utils/migrate-options.ts";
 
 interface BackupPayload {
 	exportedAt: string;
@@ -56,12 +57,13 @@ export function DataBackup() {
 			return;
 		}
 
+		const migratedOptions = migrateOptions(parsed.options);
 		const confirmed = window.confirm(
-			`Importer ${parsed.options.length} composant(s) ? Cela remplacera la configuration actuelle.`,
+			`Importer ${migratedOptions.length} composant(s) ? Cela remplacera la configuration actuelle.`,
 		);
 		if (!confirmed) return;
 
-		replaceOptions(parsed.options);
+		replaceOptions(migratedOptions);
 		setBudget(parsed.budget ?? null);
 	}
 

@@ -6,7 +6,7 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 - [x] **Export / import JSON** : bouton pour télécharger un backup de `pc-builder:options` et le réimporter. Aujourd'hui, un `localStorage.clear()` accidentel ou un changement de navigateur fait tout perdre.
 - [x] **Confirmation avant suppression** : le bouton corbeille supprime immédiatement une version, sans confirmation ni undo. Un `window.confirm` ou une modale légère éviterait une suppression accidentelle irréversible.
-- [ ] **Migration de schéma** : plusieurs champs de specs ont changé de type pendant cette conversation (`connectorType` et `vesaFormat` sont passés de `string` à `string[]`). Les anciennes données stockées avec l'ancien format ne sont pas migrées — elles s'afficheraient mal (`formatSpecValue` gère les tableaux, mais une vieille string simple resterait affichée telle quelle au lieu d'une liste). Un petit versioning du schéma localStorage + migration simple éviterait ce genre de résidu silencieux à chaque évolution du modèle.
+- [x] **Migration de schéma** : plusieurs champs de specs ont changé de type pendant cette conversation (`connectorType` et `vesaFormat` sont passés de `string` à `string[]`). Les anciennes données stockées avec l'ancien format ne sont pas migrées — elles s'afficheraient mal (`formatSpecValue` gère les tableaux, mais une vieille string simple resterait affichée telle quelle au lieu d'une liste). Un petit versioning du schéma localStorage + migration simple éviterait ce genre de résidu silencieux à chaque évolution du modèle.
 - [ ] **Sync multi-onglets** : si l'app est ouverte dans deux onglets, les changements de l'un n'apparaissent pas dans l'autre sans rechargement (pas d'écoute de l'event `storage`).
 
 ## Compatibilité

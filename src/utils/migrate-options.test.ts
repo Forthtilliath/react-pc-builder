@@ -51,6 +51,26 @@ describe("migrateOptions", () => {
 		expect(migrated?.specs.vesaFormat).toEqual(["75x75", "100x100"]);
 	});
 
+	test("defaults purchased to false when missing", () => {
+		const [migrated] = migrateOptions([
+			{ id: "1", name: "CPU", updatedAt: "2026-01-01", specs: {} },
+		]);
+		expect(migrated?.purchased).toBe(false);
+	});
+
+	test("leaves purchased untouched when already present", () => {
+		const [migrated] = migrateOptions([
+			{
+				id: "1",
+				name: "CPU",
+				updatedAt: "2026-01-01",
+				purchased: true,
+				specs: {},
+			},
+		]);
+		expect(migrated?.purchased).toBe(true);
+	});
+
 	test("is idempotent when run twice on already-migrated data", () => {
 		const once = migrateOptions([
 			{ id: "1", name: "CPU", dateAdded: "2025-01-01", specs: {} },

@@ -14,6 +14,7 @@ export function makeOption(
 		price: 0,
 		updatedAt: "2026-01-01",
 		selected: true,
+		purchased: false,
 		specs: {},
 		...overrides,
 	};

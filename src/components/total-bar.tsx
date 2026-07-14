@@ -6,6 +6,9 @@ export function TotalBar() {
 	const { options, budget, setBudget } = useBuild();
 	const selected = options.filter((o) => o.selected);
 	const total = selected.reduce((sum, o) => sum + getEffectivePrice(o), 0);
+	const purchasedTotal = selected
+		.filter((o) => o.purchased)
+		.reduce((sum, o) => sum + getEffectivePrice(o), 0);
 	const remaining = budget !== null ? budget - total : null;
 	const missingCategories = CATEGORIES.filter(
 		(category) =>
@@ -20,6 +23,14 @@ export function TotalBar() {
 					{formatPrice(total)}
 				</p>
 			</div>
+			{selected.length > 0 && (
+				<div>
+					<p className="text-sm text-slate-400">Déjà acheté</p>
+					<p className="text-2xl font-bold text-slate-100">
+						{formatPrice(purchasedTotal)}
+					</p>
+				</div>
+			)}
 			<div>
 				<label className="text-sm text-slate-400" htmlFor="budget-input">
 					Budget cible (€)

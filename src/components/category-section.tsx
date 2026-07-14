@@ -78,6 +78,9 @@ export function CategorySection({ category }: CategorySectionProps) {
 				}}
 				onDuplicate={() => duplicateOption(option.id)}
 				onDelete={() => deleteOption(option.id)}
+				onTogglePurchased={() =>
+					updateOption(option.id, { purchased: !option.purchased })
+				}
 			/>
 		);
 	}

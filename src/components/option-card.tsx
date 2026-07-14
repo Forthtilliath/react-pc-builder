@@ -1,4 +1,4 @@
-import { Copy, ExternalLink, Pencil, Trash2 } from "lucide-react";
+import { Copy, ExternalLink, Pencil, ShoppingCart, Trash2 } from "lucide-react";
 import type { SpecFieldConfig } from "../data/categories.ts";
 import type { ComponentOption } from "../types/component.ts";
 import {
@@ -16,6 +16,7 @@ interface OptionCardProps {
 	onEdit: () => void;
 	onDuplicate: () => void;
 	onDelete: () => void;
+	onTogglePurchased: () => void;
 }
 
 function formatSpecValue(value: unknown): string {
@@ -32,6 +33,7 @@ export function OptionCard({
 	onEdit,
 	onDuplicate,
 	onDelete,
+	onTogglePurchased,
 }: OptionCardProps) {
 	const discountPercent = getDiscountPercent(option.price, option.salePrice);
 	const effectivePrice = getEffectivePrice(option);
@@ -53,7 +55,14 @@ export function OptionCard({
 						className="mt-1 accent-emerald-500"
 					/>
 					<div>
-						<p className="font-medium text-slate-100">{option.name}</p>
+						<div className="flex items-center gap-2">
+							<p className="font-medium text-slate-100">{option.name}</p>
+							{option.purchased && (
+								<span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-xs font-semibold text-emerald-400">
+									Acheté
+								</span>
+							)}
+						</div>
 						<p className="text-xs text-slate-500" title="Dernière mise à jour">
 							{formatDate(option.updatedAt)}
 						</p>
@@ -61,6 +70,18 @@ export function OptionCard({
 				</label>
 				<div className="flex flex-col items-end gap-1.5">
 					<div className="flex items-center gap-1 text-slate-400">
+						<button
+							type="button"
+							onClick={onTogglePurchased}
+							className={`p-1.5 ${option.purchased ? "text-emerald-400" : "hover:text-emerald-400"}`}
+							title={
+								option.purchased
+									? "Marquer comme non acheté"
+									: "Marquer comme acheté"
+							}
+						>
+							<ShoppingCart size={16} />
+						</button>
 						{option.url && (
 							<a
 								href={option.url}

@@ -94,6 +94,7 @@ export function OptionForm({
 			url: url.trim() || undefined,
 			notes: notes.trim() || undefined,
 			selected: initial?.selected ?? false,
+			purchased: initial?.purchased ?? false,
 			specs: formValuesToSpecs(category.specFields, specValues),
 		});
 	}

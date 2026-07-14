@@ -25,9 +25,16 @@ function normalizeArraySpecs(raw: RawOption): RawOption {
 	return { ...raw, specs: migratedSpecs };
 }
 
+// "purchased" is a new required field; older records simply didn't have it.
+function defaultPurchasedFalse(raw: RawOption): RawOption {
+	if ("purchased" in raw) return raw;
+	return { ...raw, purchased: false };
+}
+
 const MIGRATIONS: Array<(raw: RawOption) => RawOption> = [
 	renameDateAddedToUpdatedAt,
 	normalizeArraySpecs,
+	defaultPurchasedFalse,
 ];
 
 // Each step only touches shapes it recognizes as outdated, so re-running all of them is idempotent.

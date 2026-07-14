@@ -48,6 +48,7 @@ export interface ComponentOption {
 	url?: string;
 	updatedAt: string;
 	selected: boolean;
+	purchased: boolean;
 	notes?: string;
 	specs: ComponentSpecs;
 }

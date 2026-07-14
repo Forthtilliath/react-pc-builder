@@ -43,6 +43,7 @@ export interface ComponentOption {
 	category: Category;
 	name: string;
 	price: number;
+	salePrice?: number;
 	url?: string;
 	dateAdded: string;
 	selected: boolean;

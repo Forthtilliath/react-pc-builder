@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useBuild } from "../context/build-context.tsx";
 import type { CategoryConfig } from "../data/categories.ts";
 import type { ComponentOption } from "../types/component.ts";
-import { formatPrice } from "../utils/format.ts";
+import { formatPrice, getEffectivePrice } from "../utils/format.ts";
 import { OptionCard } from "./option-card.tsx";
 import { OptionForm } from "./option-form.tsx";
 
@@ -25,7 +25,10 @@ export function CategorySection({ category }: CategorySectionProps) {
 
 	const categoryOptions = options.filter((o) => o.category === category.id);
 	const selectedOptions = categoryOptions.filter((o) => o.selected);
-	const selectedTotal = selectedOptions.reduce((sum, o) => sum + o.price, 0);
+	const selectedTotal = selectedOptions.reduce(
+		(sum, o) => sum + getEffectivePrice(o),
+		0,
+	);
 	const editingOption: ComponentOption | undefined = editingId
 		? categoryOptions.find((o) => o.id === editingId)
 		: undefined;

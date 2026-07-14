@@ -66,6 +66,9 @@ export function OptionForm({
 }: OptionFormProps) {
 	const [name, setName] = useState(initial?.name ?? "");
 	const [price, setPrice] = useState(initial ? String(initial.price) : "");
+	const [salePrice, setSalePrice] = useState(
+		initial?.salePrice ? String(initial.salePrice) : "",
+	);
 	const [url, setUrl] = useState(initial?.url ?? "");
 	const [dateAdded, setDateAdded] = useState(
 		initial?.dateAdded ?? new Date().toISOString().slice(0, 10),
@@ -81,6 +84,7 @@ export function OptionForm({
 			category: category.id,
 			name: name.trim(),
 			price: Number(price) || 0,
+			salePrice: salePrice.trim() ? Number(salePrice) : undefined,
 			url: url.trim() || undefined,
 			dateAdded,
 			notes: notes.trim() || undefined,
@@ -105,6 +109,16 @@ export function OptionForm({
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
+					Lien
+					<input
+						type="url"
+						value={url}
+						onChange={(e) => setUrl(e.target.value)}
+						placeholder="https://..."
+						className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
+					/>
+				</label>
+				<label className="text-sm text-slate-300">
 					Prix (€)
 					<input
 						required
@@ -117,12 +131,14 @@ export function OptionForm({
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
-					Lien
+					Prix soldé (€){" "}
+					<span className="text-slate-500">— si promo en cours</span>
 					<input
-						type="url"
-						value={url}
-						onChange={(e) => setUrl(e.target.value)}
-						placeholder="https://..."
+						type="number"
+						min="0"
+						step="0.01"
+						value={salePrice}
+						onChange={(e) => setSalePrice(e.target.value)}
 						className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
 					/>
 				</label>

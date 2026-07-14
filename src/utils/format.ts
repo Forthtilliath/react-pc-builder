@@ -11,3 +11,18 @@ export function formatDate(iso: string): string {
 		new Date(iso),
 	);
 }
+
+export function getDiscountPercent(
+	price: number,
+	salePrice: number | undefined,
+): number | null {
+	if (salePrice === undefined || salePrice >= price) return null;
+	return Math.round((1 - salePrice / price) * 100);
+}
+
+export function getEffectivePrice(option: {
+	price: number;
+	salePrice?: number;
+}): number {
+	return option.salePrice ?? option.price;
+}

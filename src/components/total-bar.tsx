@@ -1,11 +1,11 @@
 import { useBuild } from "../context/build-context.tsx";
 import { CATEGORIES } from "../data/categories.ts";
-import { formatPrice } from "../utils/format.ts";
+import { formatPrice, getEffectivePrice } from "../utils/format.ts";
 
 export function TotalBar() {
 	const { options } = useBuild();
 	const selected = options.filter((o) => o.selected);
-	const total = selected.reduce((sum, o) => sum + o.price, 0);
+	const total = selected.reduce((sum, o) => sum + getEffectivePrice(o), 0);
 	const missingCategories = CATEGORIES.filter(
 		(category) =>
 			!category.optional && !selected.some((o) => o.category === category.id),

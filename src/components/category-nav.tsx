@@ -23,8 +23,8 @@ export function CategoryNav() {
 	}, []);
 
 	return (
-		<nav className="sticky top-24 hidden max-h-[calc(100vh-7rem)] overflow-y-auto lg:block">
-			<p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+		<nav className="sticky top-28 hidden max-h-[calc(100vh-8rem)] overflow-y-auto lg:block">
+			<p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
 				Composants
 			</p>
 			<ul className="space-y-1 border-l border-slate-800">

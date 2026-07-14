@@ -45,10 +45,10 @@ export interface ComponentOption {
 	price: number;
 	salePrice?: number;
 	url?: string;
-	dateAdded: string;
+	updatedAt: string;
 	selected: boolean;
 	notes?: string;
 	specs: ComponentSpecs;
 }
 
-export type NewComponentOption = Omit<ComponentOption, "id">;
+export type NewComponentOption = Omit<ComponentOption, "id" | "updatedAt">;

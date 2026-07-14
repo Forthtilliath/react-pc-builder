@@ -12,7 +12,7 @@ export function makeOption(
 		category,
 		name: `Option ${counter}`,
 		price: 0,
-		dateAdded: "2026-01-01",
+		updatedAt: "2026-01-01",
 		selected: true,
 		specs: {},
 		...overrides,

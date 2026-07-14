@@ -54,8 +54,8 @@ export function OptionCard({
 					/>
 					<div>
 						<p className="font-medium text-slate-100">{option.name}</p>
-						<p className="text-xs text-slate-500">
-							{formatDate(option.dateAdded)}
+						<p className="text-xs text-slate-500" title="Dernière mise à jour">
+							{formatDate(option.updatedAt)}
 						</p>
 					</div>
 				</label>

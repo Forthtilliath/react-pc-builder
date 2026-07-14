@@ -2,11 +2,13 @@ import { describe, expect, test } from "bun:test";
 import { makeOption } from "../test/make-option.ts";
 import { buildReducer } from "./build-context.tsx";
 
+const todayStr = () => new Date().toISOString().slice(0, 10);
+
 describe("buildReducer", () => {
-	test("add appends the option", () => {
-		const option = makeOption("cpu");
+	test("add appends the option, stamping updatedAt with today's date", () => {
+		const option = makeOption("cpu", { updatedAt: "2020-01-01" });
 		const state = buildReducer([], { type: "add", option });
-		expect(state).toEqual([option]);
+		expect(state).toEqual([{ ...option, updatedAt: todayStr() }]);
 	});
 
 	test("update merges the patch into the matching option", () => {
@@ -17,6 +19,16 @@ describe("buildReducer", () => {
 			patch: { price: 150 },
 		});
 		expect(state[0]?.price).toBe(150);
+	});
+
+	test("update refreshes updatedAt to today's date", () => {
+		const option = makeOption("cpu", { updatedAt: "2020-01-01" });
+		const state = buildReducer([option], {
+			type: "update",
+			id: option.id,
+			patch: { price: 150 },
+		});
+		expect(state[0]?.updatedAt).toBe(todayStr());
 	});
 
 	test("delete removes the matching option", () => {

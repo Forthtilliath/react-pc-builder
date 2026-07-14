@@ -79,9 +79,6 @@ export function OptionForm({
 		initial?.salePrice ? String(initial.salePrice) : "",
 	);
 	const [url, setUrl] = useState(initial?.url ?? "");
-	const [dateAdded, setDateAdded] = useState(
-		initial?.dateAdded ?? new Date().toISOString().slice(0, 10),
-	);
 	const [notes, setNotes] = useState(initial?.notes ?? "");
 	const [specValues, setSpecValues] = useState<SpecFormValues>(() =>
 		specsToFormValues(category.specFields, initial?.specs),
@@ -95,7 +92,6 @@ export function OptionForm({
 			price: Number(price) || 0,
 			salePrice: salePrice.trim() ? Number(salePrice) : undefined,
 			url: url.trim() || undefined,
-			dateAdded,
 			notes: notes.trim() || undefined,
 			selected: initial?.selected ?? false,
 			specs: formValuesToSpecs(category.specFields, specValues),
@@ -148,15 +144,6 @@ export function OptionForm({
 						step="0.01"
 						value={salePrice}
 						onChange={(e) => setSalePrice(e.target.value)}
-						className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
-					/>
-				</label>
-				<label className="text-sm text-slate-300">
-					Date
-					<input
-						type="date"
-						value={dateAdded}
-						onChange={(e) => setDateAdded(e.target.value)}
 						className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
 					/>
 				</label>

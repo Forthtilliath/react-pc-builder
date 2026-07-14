@@ -14,11 +14,15 @@ import type {
 } from "../types/component.ts";
 
 export type Action =
-	| { type: "add"; option: ComponentOption }
+	| { type: "add"; option: Omit<ComponentOption, "updatedAt"> }
 	| { type: "update"; id: string; patch: Partial<ComponentOption> }
 	| { type: "delete"; id: string }
 	| { type: "duplicate"; id: string; newId: string }
 	| { type: "select"; category: Category; id: string };
+
+function today(): string {
+	return new Date().toISOString().slice(0, 10);
+}
 
 export function buildReducer(
 	state: ComponentOption[],
@@ -26,10 +30,12 @@ export function buildReducer(
 ): ComponentOption[] {
 	switch (action.type) {
 		case "add":
-			return [...state, action.option];
+			return [...state, { ...action.option, updatedAt: today() }];
 		case "update":
 			return state.map((option) =>
-				option.id === action.id ? { ...option, ...action.patch } : option,
+				option.id === action.id
+					? { ...option, ...action.patch, updatedAt: today() }
+					: option,
 			);
 		case "delete":
 			return state.filter((option) => option.id !== action.id);
@@ -41,7 +47,7 @@ export function buildReducer(
 				id: action.newId,
 				name: `${original.name} (copie)`,
 				selected: false,
-				dateAdded: new Date().toISOString().slice(0, 10),
+				updatedAt: today(),
 			};
 			return [...state, copy];
 		}

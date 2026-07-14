@@ -13,14 +13,14 @@ import type {
 	NewComponentOption,
 } from "../types/component.ts";
 
-type Action =
+export type Action =
 	| { type: "add"; option: ComponentOption }
 	| { type: "update"; id: string; patch: Partial<ComponentOption> }
 	| { type: "delete"; id: string }
 	| { type: "duplicate"; id: string; newId: string }
 	| { type: "select"; category: Category; id: string };
 
-function buildReducer(
+export function buildReducer(
 	state: ComponentOption[],
 	action: Action,
 ): ComponentOption[] {

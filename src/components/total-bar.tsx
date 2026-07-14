@@ -13,7 +13,7 @@ export function TotalBar() {
 	);
 
 	return (
-		<div className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900/90 p-4 backdrop-blur">
+		<div className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900/90 p-4 shadow-lg shadow-black/40 backdrop-blur">
 			<div>
 				<p className="text-sm text-slate-400">Total configuration</p>
 				<p className="text-2xl font-bold text-emerald-400">

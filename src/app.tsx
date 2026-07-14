@@ -1,3 +1,4 @@
+import { CategoryNav } from "./components/category-nav.tsx";
 import { CategorySection } from "./components/category-section.tsx";
 import { CompatibilityPanel } from "./components/compatibility-panel.tsx";
 import { DataBackup } from "./components/data-backup.tsx";
@@ -10,7 +11,7 @@ export function App() {
 	return (
 		<BuildProvider>
 			<div className="min-h-screen bg-slate-950 px-4 py-6 text-slate-100 sm:px-8">
-				<div className="mx-auto max-w-4xl space-y-6">
+				<div className="mx-auto max-w-6xl space-y-6">
 					<header className="flex flex-wrap items-start justify-between gap-4">
 						<div>
 							<h1 className="text-2xl font-bold">PC Builder</h1>
@@ -25,10 +26,13 @@ export function App() {
 					<TotalBar />
 					<CompatibilityPanel />
 
-					<div className="space-y-4">
-						{CATEGORIES.map((category) => (
-							<CategorySection key={category.id} category={category} />
-						))}
+					<div className="grid gap-6 lg:grid-cols-[200px_1fr]">
+						<CategoryNav />
+						<div className="space-y-4">
+							{CATEGORIES.map((category) => (
+								<CategorySection key={category.id} category={category} />
+							))}
+						</div>
 					</div>
 				</div>
 			</div>

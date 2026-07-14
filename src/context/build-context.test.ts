@@ -87,6 +87,23 @@ describe("buildReducer", () => {
 		expect(copy?.name).toBe("Ryzen (copie)");
 	});
 
+	test("duplicate inserts the copy immediately before the original", () => {
+		const before = makeOption("cpu", { id: "before" });
+		const original = makeOption("cpu", { id: "original" });
+		const after = makeOption("cpu", { id: "after" });
+		const state = buildReducer([before, original, after], {
+			type: "duplicate",
+			id: "original",
+			newId: "copy-1",
+		});
+		expect(state.map((o) => o.id)).toEqual([
+			"before",
+			"copy-1",
+			"original",
+			"after",
+		]);
+	});
+
 	describe("select — single-selection categories", () => {
 		test("selecting one option deselects all others in the same category", () => {
 			const a = makeOption("cpu", { id: "a", selected: true });

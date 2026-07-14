@@ -72,8 +72,11 @@ export function buildReducer(
 		case "delete":
 			return state.filter((option) => option.id !== action.id);
 		case "duplicate": {
-			const original = state.find((option) => option.id === action.id);
-			if (!original) return state;
+			const originalIndex = state.findIndex(
+				(option) => option.id === action.id,
+			);
+			if (originalIndex === -1) return state;
+			const original = state[originalIndex];
 			const copy: ComponentOption = {
 				...original,
 				id: action.newId,
@@ -82,7 +85,11 @@ export function buildReducer(
 				updatedAt: today(),
 				priceHistory: [{ date: today(), price: getEffectivePrice(original) }],
 			};
-			return [...state, copy];
+			return [
+				...state.slice(0, originalIndex),
+				copy,
+				...state.slice(originalIndex),
+			];
 		}
 		case "select": {
 			const config = getCategoryConfig(action.category);

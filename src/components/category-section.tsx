@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useBuild } from "../context/build-context.tsx";
+import { useToast } from "../context/toast-context.tsx";
 import type { CategoryConfig } from "../data/categories.ts";
 import type { ComponentOption } from "../types/component.ts";
 import { formatPrice, getEffectivePrice } from "../utils/format.ts";
@@ -20,6 +21,7 @@ export function CategorySection({ category }: CategorySectionProps) {
 		duplicateOption,
 		selectOption,
 	} = useBuild();
+	const { notify } = useToast();
 	const [isAdding, setIsAdding] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -76,7 +78,10 @@ export function CategorySection({ category }: CategorySectionProps) {
 					setIsAdding(false);
 					setEditingId(option.id);
 				}}
-				onDuplicate={() => duplicateOption(option.id)}
+				onDuplicate={() => {
+					duplicateOption(option.id);
+					notify(`"${option.name}" dupliqué`);
+				}}
 				onDelete={() => deleteOption(option.id)}
 				onTogglePurchased={() =>
 					updateOption(option.id, { purchased: !option.purchased })

@@ -5,7 +5,7 @@ import {
 	useContext,
 	useMemo,
 } from "react";
-import { getCategoryConfig } from "../data/categories.ts";
+import { getCategoryConfig, type SpecFieldKey } from "../data/categories.ts";
 import { useLocalStorage } from "../hooks/use-local-storage.ts";
 import type {
 	Category,
@@ -23,6 +23,15 @@ export type Action =
 
 function today(): string {
 	return new Date().toISOString().slice(0, 10);
+}
+
+function getGroupKey(
+	option: ComponentOption | undefined,
+	groupField: SpecFieldKey | undefined,
+): string | undefined {
+	if (!option || !groupField) return undefined;
+	const value = option.specs[groupField];
+	return typeof value === "string" ? value.trim().toLowerCase() : undefined;
 }
 
 export function buildReducer(
@@ -53,17 +62,18 @@ export function buildReducer(
 			return [...state, copy];
 		}
 		case "select": {
-			if (getCategoryConfig(action.category).allowMultipleSelected) {
+			const config = getCategoryConfig(action.category);
+			if (config.allowMultipleSelected) {
 				const target = state.find((option) => option.id === action.id);
-				const groupKey = target?.specs.accessoryType?.trim().toLowerCase();
+				const groupKey = getGroupKey(target, config.groupByField);
 				return state.map((option) => {
 					if (option.id === action.id) {
 						return { ...option, selected: !option.selected };
 					}
 					if (
-						groupKey &&
+						groupKey !== undefined &&
 						option.category === action.category &&
-						option.specs.accessoryType?.trim().toLowerCase() === groupKey
+						getGroupKey(option, config.groupByField) === groupKey
 					) {
 						return { ...option, selected: false };
 					}

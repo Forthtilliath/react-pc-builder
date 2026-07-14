@@ -36,6 +36,7 @@ export interface ComponentSpecs {
 	maxResolution?: string;
 	connectorType?: string[];
 	accessoryType?: string;
+	storageType?: "NVMe M.2" | "SATA SSD" | "HDD";
 }
 
 export interface ComponentOption {

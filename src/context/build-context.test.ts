@@ -161,4 +161,46 @@ describe("buildReducer", () => {
 			expect(state.find((o) => o.id === "b")?.selected).toBe(true);
 		});
 	});
+
+	describe("select — multi-selection category (storage)", () => {
+		test("an NVMe drive and a SATA drive can both stay selected", () => {
+			const nvme = makeOption("storage", {
+				id: "nvme",
+				selected: false,
+				specs: { storageType: "NVMe M.2" },
+			});
+			const sata = makeOption("storage", {
+				id: "sata",
+				selected: true,
+				specs: { storageType: "SATA SSD" },
+			});
+			const state = buildReducer([nvme, sata], {
+				type: "select",
+				category: "storage",
+				id: "nvme",
+			});
+			expect(state.find((o) => o.id === "nvme")?.selected).toBe(true);
+			expect(state.find((o) => o.id === "sata")?.selected).toBe(true);
+		});
+
+		test("selecting a second NVMe drive deselects the first one", () => {
+			const nvmeA = makeOption("storage", {
+				id: "nvme-a",
+				selected: true,
+				specs: { storageType: "NVMe M.2" },
+			});
+			const nvmeB = makeOption("storage", {
+				id: "nvme-b",
+				selected: false,
+				specs: { storageType: "NVMe M.2" },
+			});
+			const state = buildReducer([nvmeA, nvmeB], {
+				type: "select",
+				category: "storage",
+				id: "nvme-b",
+			});
+			expect(state.find((o) => o.id === "nvme-a")?.selected).toBe(false);
+			expect(state.find((o) => o.id === "nvme-b")?.selected).toBe(true);
+		});
+	});
 });

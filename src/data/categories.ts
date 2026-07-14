@@ -17,6 +17,7 @@ export interface CategoryConfig {
 	specFields: SpecFieldConfig[];
 	optional?: boolean;
 	allowMultipleSelected?: boolean;
+	groupByField?: SpecFieldKey;
 }
 
 export const CATEGORIES: CategoryConfig[] = [
@@ -70,7 +71,16 @@ export const CATEGORIES: CategoryConfig[] = [
 	{
 		id: "storage",
 		label: "Stockage",
-		specFields: [],
+		allowMultipleSelected: true,
+		groupByField: "storageType",
+		specFields: [
+			{
+				key: "storageType",
+				label: "Type",
+				type: "select",
+				options: ["NVMe M.2", "SATA SSD", "HDD"],
+			},
+		],
 	},
 	{
 		id: "psu",
@@ -179,6 +189,7 @@ export const CATEGORIES: CategoryConfig[] = [
 		label: "Autre",
 		optional: true,
 		allowMultipleSelected: true,
+		groupByField: "accessoryType",
 		specFields: [
 			{ key: "accessoryType", label: "Type d'accessoire", type: "text" },
 		],

@@ -18,7 +18,7 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 ## Sélection multi-composants
 
-- [ ] **Stockage multiple** : le modèle actuel ne permet qu'un seul stockage sélectionné, alors qu'un build réel a souvent un NVMe + un SATA. Le pattern "regroupement + sélection unique par groupe" qu'on vient d'ajouter pour "Autre" pourrait s'appliquer au stockage (groupé par type M.2/SATA), en autorisant plusieurs sélections simultanées.
+- [x] **Stockage multiple** : le modèle actuel ne permet qu'un seul stockage sélectionné, alors qu'un build réel a souvent un NVMe + un SATA. Le pattern "regroupement + sélection unique par groupe" qu'on vient d'ajouter pour "Autre" pourrait s'appliquer au stockage (groupé par type M.2/SATA), en autorisant plusieurs sélections simultanées.
 
 ## Fonctionnalités
 

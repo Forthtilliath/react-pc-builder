@@ -37,7 +37,13 @@ export function CategorySection({ category }: CategorySectionProps) {
 		category.allowMultipleSelected ? new Map() : null;
 	if (groups) {
 		for (const option of categoryOptions) {
-			const groupLabel = option.specs.accessoryType?.trim() || "Sans type";
+			const rawValue = category.groupByField
+				? option.specs[category.groupByField]
+				: undefined;
+			const groupLabel =
+				typeof rawValue === "string" && rawValue.trim()
+					? rawValue.trim()
+					: "Sans type";
 			const group = groups.get(groupLabel);
 			if (group) {
 				group.push(option);

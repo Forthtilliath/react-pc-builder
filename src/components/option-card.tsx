@@ -90,7 +90,11 @@ export function OptionCard({
 						</button>
 						<button
 							type="button"
-							onClick={onDelete}
+							onClick={() => {
+								if (window.confirm(`Supprimer "${option.name}" ?`)) {
+									onDelete();
+								}
+							}}
 							className="p-1.5 hover:text-red-400"
 							title="Supprimer"
 						>

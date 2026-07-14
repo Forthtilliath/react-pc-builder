@@ -6,6 +6,7 @@ import { formatDate, formatPrice } from "../utils/format.ts";
 interface OptionCardProps {
 	option: ComponentOption;
 	specFields: SpecFieldConfig[];
+	multiple?: boolean;
 	onSelect: () => void;
 	onEdit: () => void;
 	onDuplicate: () => void;
@@ -21,6 +22,7 @@ function formatSpecValue(value: unknown): string {
 export function OptionCard({
 	option,
 	specFields,
+	multiple,
 	onSelect,
 	onEdit,
 	onDuplicate,
@@ -37,7 +39,7 @@ export function OptionCard({
 			<div className="flex items-start justify-between gap-3">
 				<label className="flex items-start gap-3 cursor-pointer">
 					<input
-						type="radio"
+						type={multiple ? "checkbox" : "radio"}
 						checked={option.selected}
 						onChange={onSelect}
 						className="mt-1 accent-emerald-500"

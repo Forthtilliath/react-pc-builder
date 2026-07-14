@@ -5,6 +5,7 @@ import {
 	useContext,
 	useMemo,
 } from "react";
+import { getCategoryConfig } from "../data/categories.ts";
 import { useLocalStorage } from "../hooks/use-local-storage.ts";
 import type {
 	Category,
@@ -44,12 +45,20 @@ function buildReducer(
 			};
 			return [...state, copy];
 		}
-		case "select":
+		case "select": {
+			if (getCategoryConfig(action.category).allowMultipleSelected) {
+				return state.map((option) =>
+					option.id === action.id
+						? { ...option, selected: !option.selected }
+						: option,
+				);
+			}
 			return state.map((option) =>
 				option.category === action.category
 					? { ...option, selected: option.id === action.id }
 					: option,
 			);
+		}
 		default:
 			return state;
 	}

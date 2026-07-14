@@ -16,6 +16,7 @@ export interface CategoryConfig {
 	label: string;
 	specFields: SpecFieldConfig[];
 	optional?: boolean;
+	allowMultipleSelected?: boolean;
 }
 
 export const CATEGORIES: CategoryConfig[] = [
@@ -177,6 +178,7 @@ export const CATEGORIES: CategoryConfig[] = [
 		id: "other",
 		label: "Autre",
 		optional: true,
+		allowMultipleSelected: true,
 		specFields: [
 			{ key: "accessoryType", label: "Type d'accessoire", type: "text" },
 		],

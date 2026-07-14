@@ -24,7 +24,8 @@ export function CategorySection({ category }: CategorySectionProps) {
 	const [editingId, setEditingId] = useState<string | null>(null);
 
 	const categoryOptions = options.filter((o) => o.category === category.id);
-	const selected = categoryOptions.find((o) => o.selected);
+	const selectedOptions = categoryOptions.filter((o) => o.selected);
+	const selectedTotal = selectedOptions.reduce((sum, o) => sum + o.price, 0);
 	const editingOption: ComponentOption | undefined = editingId
 		? categoryOptions.find((o) => o.id === editingId)
 		: undefined;
@@ -39,8 +40,8 @@ export function CategorySection({ category }: CategorySectionProps) {
 					<p className="text-sm text-slate-500">
 						{categoryOptions.length} version
 						{categoryOptions.length > 1 ? "s" : ""}
-						{selected
-							? ` · sélectionné : ${formatPrice(selected.price)}`
+						{selectedOptions.length > 0
+							? ` · sélectionné${selectedOptions.length > 1 ? "s" : ""} : ${formatPrice(selectedTotal)}`
 							: " · aucune sélection"}
 					</p>
 				</div>
@@ -76,6 +77,7 @@ export function CategorySection({ category }: CategorySectionProps) {
 								key={option.id}
 								option={option}
 								specFields={category.specFields}
+								multiple={category.allowMultipleSelected}
 								onSelect={() => selectOption(category.id, option.id)}
 								onEdit={() => {
 									setIsAdding(false);

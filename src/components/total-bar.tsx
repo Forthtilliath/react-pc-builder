@@ -1,14 +1,9 @@
 import { useBuild } from "../context/build-context.tsx";
 import { CATEGORIES } from "../data/categories.ts";
-import { useLocalStorage } from "../hooks/use-local-storage.ts";
 import { formatPrice, getEffectivePrice } from "../utils/format.ts";
 
 export function TotalBar() {
-	const { options } = useBuild();
-	const [budget, setBudget] = useLocalStorage<number | null>(
-		"pc-builder:budget",
-		null,
-	);
+	const { options, budget, setBudget } = useBuild();
 	const selected = options.filter((o) => o.selected);
 	const total = selected.reduce((sum, o) => sum + getEffectivePrice(o), 0);
 	const remaining = budget !== null ? budget - total : null;

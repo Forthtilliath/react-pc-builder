@@ -87,6 +87,9 @@ interface BuildContextValue {
 	deleteOption: (id: string) => void;
 	duplicateOption: (id: string) => void;
 	selectOption: (category: Category, id: string) => void;
+	replaceOptions: (options: ComponentOption[]) => void;
+	budget: number | null;
+	setBudget: (budget: number | null) => void;
 }
 
 const BuildContext = createContext<BuildContextValue | null>(null);
@@ -95,6 +98,10 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 	const [options, setOptions] = useLocalStorage<ComponentOption[]>(
 		"pc-builder:options",
 		[],
+	);
+	const [budget, setBudget] = useLocalStorage<number | null>(
+		"pc-builder:budget",
+		null,
 	);
 
 	const dispatch = useCallback(
@@ -116,8 +123,11 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 				dispatch({ type: "duplicate", id, newId: crypto.randomUUID() }),
 			selectOption: (category, id) =>
 				dispatch({ type: "select", category, id }),
+			replaceOptions: setOptions,
+			budget,
+			setBudget,
 		}),
-		[options, dispatch],
+		[options, dispatch, setOptions, budget, setBudget],
 	);
 
 	return (

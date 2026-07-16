@@ -15,7 +15,7 @@ export interface SpecFieldConfig {
 	showIf?: { key: SpecFieldKey; equals: string };
 }
 
-const SOCKET_SUGGESTIONS = ["AMD", "AM4", "AM5"];
+const SOCKET_SUGGESTIONS = ["AM4", "AM5"];
 
 const FORM_FACTOR_OPTIONS = ["ATX", "mATX", "ITX", "E-ATX"];
 const FORM_FACTOR_LABELS = { mATX: "Micro ATX", ITX: "Mini ITX" };

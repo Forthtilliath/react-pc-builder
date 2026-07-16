@@ -11,7 +11,7 @@ function getCheck(results: ReturnType<typeof checkCompatibility>, id: string) {
 describe("checkCompatibility", () => {
 	test("returns info for every check when nothing is selected", () => {
 		const results = checkCompatibility([]);
-		expect(results).toHaveLength(8);
+		expect(results).toHaveLength(9);
 		for (const check of results) {
 			expect(check.status).toBe("info");
 		}
@@ -148,6 +148,42 @@ describe("checkCompatibility", () => {
 			expect(getCheck(checkCompatibility(options), "form-factor").status).toBe(
 				"error",
 			);
+		});
+	});
+
+	describe("psu form factor check", () => {
+		test("ok when the case supports the PSU's form factor", () => {
+			const options = [
+				makeOption("psu", { specs: { psuFormFactor: "SFX" } }),
+				makeOption("case", {
+					specs: { supportedPsuFormFactors: ["ATX", "SFX"] },
+				}),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "psu-form-factor").status,
+			).toBe("ok");
+		});
+
+		test("error when the case does not support the PSU's form factor", () => {
+			const options = [
+				makeOption("psu", { specs: { psuFormFactor: "ATX" } }),
+				makeOption("case", {
+					specs: { supportedPsuFormFactors: ["SFX", "SFX-L"] },
+				}),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "psu-form-factor").status,
+			).toBe("error");
+		});
+
+		test("info when the relevant specs are missing", () => {
+			const options = [
+				makeOption("psu", { specs: {} }),
+				makeOption("case", { specs: { supportedPsuFormFactors: ["ATX"] } }),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "psu-form-factor").status,
+			).toBe("info");
 		});
 	});
 

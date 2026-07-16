@@ -46,6 +46,8 @@ export interface ComponentSpecs {
 	compatibleSockets?: string[];
 	coolerType?: "Air" | "AIO";
 	radiatorSize?: string;
+	psuFormFactor?: string;
+	supportedPsuFormFactors?: string[];
 }
 
 export interface PricePoint {

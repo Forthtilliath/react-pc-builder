@@ -193,6 +193,46 @@ function formFactorCheck(
 	};
 }
 
+function psuFormFactorCheck(
+	psu: ComponentOption | undefined,
+	pcCase: ComponentOption | undefined,
+): CompatibilityCheck {
+	const id = "psu-form-factor";
+	const label = "Format alimentation / boîtier";
+	if (!psu || !pcCase) {
+		return {
+			id,
+			label,
+			status: "info",
+			message: "Sélectionne une alimentation et un boîtier pour vérifier.",
+		};
+	}
+	const supported = pcCase.specs.supportedPsuFormFactors;
+	if (!psu.specs.psuFormFactor || !supported || supported.length === 0) {
+		return {
+			id,
+			label,
+			status: "info",
+			message:
+				"Renseigne le format de l'alimentation et les formats supportés par le boîtier.",
+		};
+	}
+	if (supported.includes(psu.specs.psuFormFactor)) {
+		return {
+			id,
+			label,
+			status: "ok",
+			message: `Format ${psu.specs.psuFormFactor} supporté par le boîtier.`,
+		};
+	}
+	return {
+		id,
+		label,
+		status: "error",
+		message: `Format ${psu.specs.psuFormFactor} non supporté par le boîtier (${supported.join(", ")}).`,
+	};
+}
+
 function wattageCheck(
 	cpu: ComponentOption | undefined,
 	gpu: ComponentOption | undefined,
@@ -422,6 +462,7 @@ export function checkCompatibility(
 		ramTypeCheck(ram, motherboard),
 		ramCapacityCheck(ram, motherboard),
 		formFactorCheck(motherboard, pcCase),
+		psuFormFactorCheck(psu, pcCase),
 		wattageCheck(cpu, gpu, psu, psuSafetyMargin),
 		gpuLengthCheck(gpu, pcCase),
 		coolerHeightCheck(cooler, pcCase),

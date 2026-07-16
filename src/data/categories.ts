@@ -20,6 +20,8 @@ const SOCKET_SUGGESTIONS = ["AM4", "AM5"];
 const FORM_FACTOR_OPTIONS = ["ATX", "mATX", "ITX", "E-ATX"];
 const FORM_FACTOR_LABELS = { mATX: "Micro ATX", ITX: "Mini ITX" };
 
+const PSU_FORM_FACTOR_OPTIONS = ["ATX", "SFX", "SFX-L"];
+
 export interface CategoryConfig {
 	id: Category;
 	label: string;
@@ -122,6 +124,12 @@ export const CATEGORIES: CategoryConfig[] = [
 		label: "Alimentation",
 		specFields: [
 			{ key: "wattage", label: "Puissance", type: "number", unit: "W" },
+			{
+				key: "psuFormFactor",
+				label: "Format",
+				type: "select",
+				options: PSU_FORM_FACTOR_OPTIONS,
+			},
 		],
 	},
 	{
@@ -146,6 +154,12 @@ export const CATEGORIES: CategoryConfig[] = [
 				label: "Hauteur ventirad max",
 				type: "number",
 				unit: "mm",
+			},
+			{
+				key: "supportedPsuFormFactors",
+				label: "Formats alim supportés",
+				type: "tags",
+				options: PSU_FORM_FACTOR_OPTIONS,
 			},
 		],
 	},

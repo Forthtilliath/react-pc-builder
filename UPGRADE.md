@@ -4,7 +4,7 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 ## Compatibilité
 
-- [ ] **PSU ↔ boîtier (format ATX/SFX)** : le boîtier vérifie déjà les formats de carte mère et la hauteur de ventirad, mais pas si l'alimentation elle-même rentre dedans. Certains boîtiers compacts n'acceptent que du SFX/SFX-L. Ajouter un champ `psuFormFactor` (alimentation) + `supportedPsuFormFactors` (boîtier) permettrait un vrai check, sur le même modèle que le format de carte mère.
+- [x] **PSU ↔ boîtier (format ATX/SFX)** : le boîtier vérifie déjà les formats de carte mère et la hauteur de ventirad, mais pas si l'alimentation elle-même rentre dedans. Certains boîtiers compacts n'acceptent que du SFX/SFX-L. Ajouter un champ `psuFormFactor` (alimentation) + `supportedPsuFormFactors` (boîtier) permettrait un vrai check, sur le même modèle que le format de carte mère.
 - [ ] **AIO ↔ boîtier (taille radiateur)** : le refroidissement distingue maintenant Air/AIO avec une taille de radiateur (120/240/280/360mm) pour les AIO, mais le boîtier n'a pas encore de champ "tailles de radiateur supportées" — donc pas de vrai check de compatibilité pour un AIO, juste la saisie des specs.
 
 ## Confort d'usage

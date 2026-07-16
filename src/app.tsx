@@ -44,9 +44,9 @@ export function App() {
 						<TotalBar />
 						<CompatibilityPanel />
 
-						<div className="grid gap-6 lg:grid-cols-[200px_1fr]">
+						<div className="grid min-w-0 gap-6 lg:grid-cols-[200px_1fr]">
 							<CategoryNav />
-							<div className="space-y-4">
+							<div className="min-w-0 space-y-4">
 								<CollapseControls />
 								{CATEGORIES.map((category) => (
 									<CategorySection key={category.id} category={category} />

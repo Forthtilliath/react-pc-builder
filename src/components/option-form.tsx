@@ -166,6 +166,46 @@ export function OptionForm({
 				<div className="grid gap-3 sm:grid-cols-3">
 					{category.specFields.map((field) => {
 						const fieldId = `spec-${category.id}-${field.key}`;
+
+						if (field.type === "tags" && field.options) {
+							const selectedValues = (specValues[field.key] ?? "")
+								.split(",")
+								.map((v) => v.trim())
+								.filter(Boolean);
+							return (
+								<div key={field.key} className="text-sm text-slate-300">
+									{field.label}
+									<div className="mt-1 flex flex-wrap gap-2">
+										{field.options.map((opt) => {
+											const checked = selectedValues.includes(opt);
+											return (
+												<label
+													key={opt}
+													className="flex items-center gap-1.5 rounded border border-slate-600 bg-slate-900 px-2 py-1 text-sm text-slate-200"
+												>
+													<input
+														type="checkbox"
+														checked={checked}
+														onChange={() => {
+															const next = checked
+																? selectedValues.filter((v) => v !== opt)
+																: [...selectedValues, opt];
+															setSpecValues((prev) => ({
+																...prev,
+																[field.key]: next.join(", "),
+															}));
+														}}
+														className="accent-emerald-500"
+													/>
+													{opt}
+												</label>
+											);
+										})}
+									</div>
+								</div>
+							);
+						}
+
 						return (
 							<label
 								key={field.key}

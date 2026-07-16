@@ -45,7 +45,7 @@ export const CATEGORIES: CategoryConfig[] = [
 				key: "formFactor",
 				label: "Format",
 				type: "select",
-				options: ["ATX", "mATX", "ITX"],
+				options: ["ATX", "mATX", "ITX", "E-ATX"],
 			},
 			{ key: "ramSlots", label: "Slots RAM", type: "number" },
 			{
@@ -112,6 +112,7 @@ export const CATEGORIES: CategoryConfig[] = [
 				key: "supportedFormFactors",
 				label: "Formats supportés",
 				type: "tags",
+				options: ["ATX", "mATX", "ITX", "E-ATX"],
 			},
 			{
 				key: "maxGpuLengthMm",
@@ -186,6 +187,7 @@ export const CATEGORIES: CategoryConfig[] = [
 				key: "vesaFormat",
 				label: "Formats VESA",
 				type: "tags",
+				options: ["75x75", "100x100", "200x100", "200x200"],
 			},
 		],
 	},
@@ -198,6 +200,7 @@ export const CATEGORIES: CategoryConfig[] = [
 				key: "vesaFormat",
 				label: "Formats VESA",
 				type: "tags",
+				options: ["75x75", "100x100", "200x100", "200x200"],
 			},
 			{
 				key: "maxWeightKg",
@@ -217,6 +220,7 @@ export const CATEGORIES: CategoryConfig[] = [
 				key: "connectorType",
 				label: "Connecteurs",
 				type: "tags",
+				options: ["HDMI", "DisplayPort", "USB-C"],
 			},
 			{ key: "maxResolution", label: "Résolution max", type: "text" },
 		],

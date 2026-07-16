@@ -5,7 +5,11 @@ import {
 	useContext,
 	useMemo,
 } from "react";
-import { getCategoryConfig, type SpecFieldKey } from "../data/categories.ts";
+import {
+	CATEGORIES,
+	getCategoryConfig,
+	type SpecFieldKey,
+} from "../data/categories.ts";
 import { useLocalStorage } from "../hooks/use-local-storage.ts";
 import type {
 	Category,
@@ -129,11 +133,18 @@ interface BuildContextValue {
 	deleteOption: (id: string) => void;
 	duplicateOption: (id: string) => void;
 	selectOption: (category: Category, id: string) => void;
-	replaceOptions: (options: ComponentOption[]) => void;
+	replaceOptions: (
+		options:
+			| ComponentOption[]
+			| ((prev: ComponentOption[]) => ComponentOption[]),
+	) => void;
 	budget: number | null;
 	setBudget: (budget: number | null) => void;
 	psuSafetyMargin: number;
 	setPsuSafetyMargin: (margin: number) => void;
+	collapsedCategories: Record<string, boolean>;
+	setCategoryCollapsed: (categoryId: string, collapsed: boolean) => void;
+	setAllCategoriesCollapsed: (collapsed: boolean) => void;
 }
 
 const BuildContext = createContext<BuildContextValue | null>(null);
@@ -152,6 +163,9 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 		"pc-builder:psu-safety-margin",
 		DEFAULT_PSU_SAFETY_MARGIN,
 	);
+	const [collapsedCategories, setCollapsedCategories] = useLocalStorage<
+		Record<string, boolean>
+	>("pc-builder:collapsed", {});
 
 	const dispatch = useCallback(
 		(action: Action) => setOptions((prev) => buildReducer(prev, action)),
@@ -177,6 +191,18 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 			setBudget,
 			psuSafetyMargin,
 			setPsuSafetyMargin,
+			collapsedCategories,
+			setCategoryCollapsed: (categoryId, collapsed) =>
+				setCollapsedCategories((prev) => ({
+					...prev,
+					[categoryId]: collapsed,
+				})),
+			setAllCategoriesCollapsed: (collapsed) =>
+				setCollapsedCategories(
+					Object.fromEntries(
+						CATEGORIES.map((category) => [category.id, collapsed]),
+					),
+				),
 		}),
 		[
 			options,
@@ -186,6 +212,8 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 			setBudget,
 			psuSafetyMargin,
 			setPsuSafetyMargin,
+			collapsedCategories,
+			setCollapsedCategories,
 		],
 	);
 

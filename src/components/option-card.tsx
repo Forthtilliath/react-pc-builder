@@ -150,11 +150,7 @@ export function OptionCard({
 						<span className="mx-1 h-4 w-px bg-slate-700" />
 						<button
 							type="button"
-							onClick={() => {
-								if (window.confirm(`Supprimer "${option.name}" ?`)) {
-									onDelete();
-								}
-							}}
+							onClick={onDelete}
 							className="p-1.5 hover:text-red-400"
 							title="Supprimer"
 						>

@@ -9,8 +9,8 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 ## Confort d'usage
 
-- [ ] **Sections repliables** : la page affiche en permanence 14 catégories, dont plusieurs optionnelles rarement utilisées (switch KVM, bras d'écran...). Un accordéon (replié par défaut si vide) réduirait le scroll, surtout maintenant que la nav latérale existe pour sauter directement à une section.
-- [ ] **Undo après suppression** : la confirmation avant suppression évite les accidents, mais un vrai filet de sécurité serait un toast "Supprimé — Annuler" (quelques secondes) plutôt qu'un blocage systématique par `window.confirm`. On a déjà l'infra toast (`ToastProvider`) pour ça.
+- [x] **Sections repliables** : la page affiche en permanence 14 catégories, dont plusieurs optionnelles rarement utilisées (switch KVM, bras d'écran...). Un accordéon (replié par défaut si vide) réduirait le scroll, surtout maintenant que la nav latérale existe pour sauter directement à une section.
+- [x] **Undo après suppression** : la confirmation avant suppression évite les accidents, mais un vrai filet de sécurité serait un toast "Supprimé — Annuler" (quelques secondes) plutôt qu'un blocage systématique par `window.confirm`. On a déjà l'infra toast (`ToastProvider`) pour ça.
 
 ## Qualité de code
 

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { BuildSummary } from "./components/build-summary.tsx";
 import { CategoryNav } from "./components/category-nav.tsx";
 import { CategorySection } from "./components/category-section.tsx";
+import { CollapseControls } from "./components/collapse-controls.tsx";
 import { CompatibilityPanel } from "./components/compatibility-panel.tsx";
 import { DataBackup } from "./components/data-backup.tsx";
 import { TotalBar } from "./components/total-bar.tsx";
@@ -46,6 +47,7 @@ export function App() {
 						<div className="grid gap-6 lg:grid-cols-[200px_1fr]">
 							<CategoryNav />
 							<div className="space-y-4">
+								<CollapseControls />
 								{CATEGORIES.map((category) => (
 									<CategorySection key={category.id} category={category} />
 								))}

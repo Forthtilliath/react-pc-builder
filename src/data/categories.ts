@@ -12,9 +12,10 @@ export interface SpecFieldConfig {
 	optionLabels?: Record<string, string>;
 	unit?: string;
 	suggestions?: string[];
+	showIf?: { key: SpecFieldKey; equals: string };
 }
 
-const SOCKET_SUGGESTIONS = ["AM4", "AM5"];
+const SOCKET_SUGGESTIONS = ["AMD", "AM4", "AM5"];
 
 const FORM_FACTOR_OPTIONS = ["ATX", "mATX", "ITX", "E-ATX"];
 const FORM_FACTOR_LABELS = { mATX: "Micro ATX", ITX: "Mini ITX" };
@@ -153,12 +154,32 @@ export const CATEGORIES: CategoryConfig[] = [
 		label: "Refroidissement",
 		specFields: [
 			{
-				key: "socket",
-				label: "Socket compatible",
-				type: "text",
-				suggestions: SOCKET_SUGGESTIONS,
+				key: "coolerType",
+				label: "Type",
+				type: "select",
+				options: ["Air", "AIO"],
+				optionLabels: { Air: "Ventirad", AIO: "Watercooling" },
 			},
-			{ key: "coolerHeightMm", label: "Hauteur", type: "number", unit: "mm" },
+			{
+				key: "compatibleSockets",
+				label: "Sockets compatibles",
+				type: "tags",
+				options: SOCKET_SUGGESTIONS,
+			},
+			{
+				key: "coolerHeightMm",
+				label: "Hauteur",
+				type: "number",
+				unit: "mm",
+				showIf: { key: "coolerType", equals: "Air" },
+			},
+			{
+				key: "radiatorSize",
+				label: "Taille radiateur",
+				type: "select",
+				options: ["120mm", "240mm", "280mm", "360mm"],
+				showIf: { key: "coolerType", equals: "AIO" },
+			},
 		],
 	},
 	{

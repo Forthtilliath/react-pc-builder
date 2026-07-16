@@ -315,6 +315,15 @@ function coolerHeightCheck(
 			message: "Sélectionne un boîtier pour vérifier.",
 		};
 	}
+	if (cooler.specs.coolerType === "AIO") {
+		return {
+			id,
+			label,
+			status: "info",
+			message:
+				"Refroidissement AIO : la hauteur ne s'applique pas (vérifie plutôt l'emplacement du radiateur dans le boîtier).",
+		};
+	}
 	if (
 		cooler.specs.coolerHeightMm === undefined ||
 		pcCase.specs.maxCoolerHeightMm === undefined

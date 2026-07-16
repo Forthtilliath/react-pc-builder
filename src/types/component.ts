@@ -43,6 +43,9 @@ export interface ComponentSpecs {
 	capacityGb?: number;
 	coolerHeightMm?: number;
 	maxCoolerHeightMm?: number;
+	compatibleSockets?: string[];
+	coolerType?: "Air" | "AIO";
+	radiatorSize?: string;
 }
 
 export interface PricePoint {

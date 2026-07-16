@@ -85,6 +85,10 @@ export function OptionForm({
 	const [specValues, setSpecValues] = useState<SpecFormValues>(() =>
 		specsToFormValues(category.specFields, initial?.specs),
 	);
+	const visibleSpecFields = category.specFields.filter(
+		(field) =>
+			!field.showIf || specValues[field.showIf.key] === field.showIf.equals,
+	);
 
 	function handleSubmit(event: FormEvent) {
 		event.preventDefault();
@@ -98,7 +102,7 @@ export function OptionForm({
 			notes: notes.trim() || undefined,
 			selected: initial?.selected ?? false,
 			purchased: initial?.purchased ?? false,
-			specs: formValuesToSpecs(category.specFields, specValues),
+			specs: formValuesToSpecs(visibleSpecFields, specValues),
 		});
 	}
 
@@ -163,9 +167,9 @@ export function OptionForm({
 				</label>
 			</div>
 
-			{category.specFields.length > 0 && (
+			{visibleSpecFields.length > 0 && (
 				<div className="grid gap-3 sm:grid-cols-3">
-					{category.specFields.map((field) => {
+					{visibleSpecFields.map((field) => {
 						const fieldId = `spec-${category.id}-${field.key}`;
 
 						if (field.type === "tags" && field.options) {

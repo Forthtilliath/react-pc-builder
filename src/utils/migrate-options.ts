@@ -47,11 +47,30 @@ function defaultPriceHistory(raw: RawOption): RawOption {
 	};
 }
 
+// Coolers used the shared single-value "socket" spec (like CPUs/motherboards), but a
+// cooler often fits several sockets, so it moved to its own "compatibleSockets" array.
+function migrateCoolerSocket(raw: RawOption): RawOption {
+	if (raw.category !== "cooler") return raw;
+	const specs = raw.specs;
+	if (!specs || typeof specs !== "object") return raw;
+	if (!("socket" in specs) || "compatibleSockets" in specs) return raw;
+	const { socket, ...rest } = specs as Record<string, unknown>;
+	const compatibleSockets =
+		typeof socket === "string"
+			? socket
+					.split(",")
+					.map((value) => value.trim())
+					.filter(Boolean)
+			: [];
+	return { ...raw, specs: { ...rest, compatibleSockets } };
+}
+
 const MIGRATIONS: Array<(raw: RawOption) => RawOption> = [
 	renameDateAddedToUpdatedAt,
 	normalizeArraySpecs,
 	defaultPurchasedFalse,
 	defaultPriceHistory,
+	migrateCoolerSocket,
 ];
 
 // Each step only touches shapes it recognizes as outdated, so re-running all of them is idempotent.

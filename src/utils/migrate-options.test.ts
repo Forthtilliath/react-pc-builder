@@ -118,6 +118,47 @@ describe("migrateOptions", () => {
 		]);
 	});
 
+	test("moves a cooler's single socket string into compatibleSockets", () => {
+		const [migrated] = migrateOptions([
+			{
+				id: "1",
+				name: "Noctua NH-D15",
+				category: "cooler",
+				updatedAt: "2026-01-01",
+				specs: { socket: "AM4, AM5" },
+			},
+		]);
+		expect(migrated?.specs.compatibleSockets).toEqual(["AM4", "AM5"]);
+		expect(migrated?.specs).not.toHaveProperty("socket");
+	});
+
+	test("leaves compatibleSockets untouched when already present", () => {
+		const [migrated] = migrateOptions([
+			{
+				id: "1",
+				name: "Noctua NH-D15",
+				category: "cooler",
+				updatedAt: "2026-01-01",
+				specs: { compatibleSockets: ["AM5"] },
+			},
+		]);
+		expect(migrated?.specs.compatibleSockets).toEqual(["AM5"]);
+	});
+
+	test("does not touch socket for non-cooler categories", () => {
+		const [migrated] = migrateOptions([
+			{
+				id: "1",
+				name: "Ryzen 7 9800X3D",
+				category: "cpu",
+				updatedAt: "2026-01-01",
+				specs: { socket: "AM5" },
+			},
+		]);
+		expect(migrated?.specs.socket).toBe("AM5");
+		expect(migrated?.specs).not.toHaveProperty("compatibleSockets");
+	});
+
 	test("is idempotent when run twice on already-migrated data", () => {
 		const once = migrateOptions([
 			{ id: "1", name: "CPU", dateAdded: "2025-01-01", specs: {} },

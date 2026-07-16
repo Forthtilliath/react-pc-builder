@@ -270,6 +270,16 @@ describe("checkCompatibility", () => {
 				getCheck(checkCompatibility(options), "cooler-height").status,
 			).toBe("info");
 		});
+
+		test("info for an AIO cooler even if coolerHeightMm is missing", () => {
+			const options = [
+				makeOption("cooler", { specs: { coolerType: "AIO" } }),
+				makeOption("case", { specs: { maxCoolerHeightMm: 160 } }),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "cooler-height").status,
+			).toBe("info");
+		});
 	});
 
 	describe("vesa check", () => {

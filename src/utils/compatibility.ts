@@ -333,37 +333,45 @@ function gpuLengthCheck(
 	};
 }
 
-function coolerHeightCheck(
-	cooler: ComponentOption | undefined,
-	pcCase: ComponentOption | undefined,
+function aioRadiatorCheck(
+	cooler: ComponentOption,
+	pcCase: ComponentOption,
+	id: string,
+	label: string,
 ): CompatibilityCheck {
-	const id = "cooler-height";
-	const label = "Hauteur ventirad / boîtier";
-	if (!cooler) {
-		return {
-			id,
-			label,
-			status: "info",
-			message: "Aucun ventirad sélectionné.",
-		};
-	}
-	if (!pcCase) {
-		return {
-			id,
-			label,
-			status: "info",
-			message: "Sélectionne un boîtier pour vérifier.",
-		};
-	}
-	if (cooler.specs.coolerType === "AIO") {
+	const radiatorSize = cooler.specs.radiatorSize;
+	const supported = pcCase.specs.supportedRadiatorSizes;
+	if (!radiatorSize || !supported || supported.length === 0) {
 		return {
 			id,
 			label,
 			status: "info",
 			message:
-				"Refroidissement AIO : la hauteur ne s'applique pas (vérifie plutôt l'emplacement du radiateur dans le boîtier).",
+				"Renseigne la taille du radiateur et les tailles supportées par le boîtier.",
 		};
 	}
+	if (supported.includes(radiatorSize)) {
+		return {
+			id,
+			label,
+			status: "ok",
+			message: `Radiateur ${radiatorSize} supporté par le boîtier.`,
+		};
+	}
+	return {
+		id,
+		label,
+		status: "error",
+		message: `Radiateur ${radiatorSize} non supporté par le boîtier (${supported.join(", ")}).`,
+	};
+}
+
+function airCoolerHeightCheck(
+	cooler: ComponentOption,
+	pcCase: ComponentOption,
+	id: string,
+	label: string,
+): CompatibilityCheck {
 	if (
 		cooler.specs.coolerHeightMm === undefined ||
 		pcCase.specs.maxCoolerHeightMm === undefined
@@ -390,6 +398,34 @@ function coolerHeightCheck(
 		status: "error",
 		message: `Ventirad (${cooler.specs.coolerHeightMm} mm) trop haut pour le boîtier (max ${pcCase.specs.maxCoolerHeightMm} mm).`,
 	};
+}
+
+function coolerHeightCheck(
+	cooler: ComponentOption | undefined,
+	pcCase: ComponentOption | undefined,
+): CompatibilityCheck {
+	const id = "cooler-height";
+	const label = "Refroidissement / boîtier";
+	if (!cooler) {
+		return {
+			id,
+			label,
+			status: "info",
+			message: "Aucun refroidissement sélectionné.",
+		};
+	}
+	if (!pcCase) {
+		return {
+			id,
+			label,
+			status: "info",
+			message: "Sélectionne un boîtier pour vérifier.",
+		};
+	}
+	if (cooler.specs.coolerType === "AIO") {
+		return aioRadiatorCheck(cooler, pcCase, id, label);
+	}
+	return airCoolerHeightCheck(cooler, pcCase, id, label);
 }
 
 function vesaCheck(

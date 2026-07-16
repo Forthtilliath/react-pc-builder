@@ -48,6 +48,7 @@ export interface ComponentSpecs {
 	radiatorSize?: string;
 	psuFormFactor?: string;
 	supportedPsuFormFactors?: string[];
+	supportedRadiatorSizes?: string[];
 }
 
 export interface PricePoint {

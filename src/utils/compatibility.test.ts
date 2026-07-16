@@ -307,7 +307,7 @@ describe("checkCompatibility", () => {
 			).toBe("info");
 		});
 
-		test("info for an AIO cooler even if coolerHeightMm is missing", () => {
+		test("info for an AIO cooler when radiator size specs are missing", () => {
 			const options = [
 				makeOption("cooler", { specs: { coolerType: "AIO" } }),
 				makeOption("case", { specs: { maxCoolerHeightMm: 160 } }),
@@ -315,6 +315,34 @@ describe("checkCompatibility", () => {
 			expect(
 				getCheck(checkCompatibility(options), "cooler-height").status,
 			).toBe("info");
+		});
+
+		test("ok when the case supports the AIO's radiator size", () => {
+			const options = [
+				makeOption("cooler", {
+					specs: { coolerType: "AIO", radiatorSize: "240mm" },
+				}),
+				makeOption("case", {
+					specs: { supportedRadiatorSizes: ["240mm", "360mm"] },
+				}),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "cooler-height").status,
+			).toBe("ok");
+		});
+
+		test("error when the case does not support the AIO's radiator size", () => {
+			const options = [
+				makeOption("cooler", {
+					specs: { coolerType: "AIO", radiatorSize: "360mm" },
+				}),
+				makeOption("case", {
+					specs: { supportedRadiatorSizes: ["120mm", "240mm"] },
+				}),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "cooler-height").status,
+			).toBe("error");
 		});
 	});
 

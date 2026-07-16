@@ -22,6 +22,8 @@ const FORM_FACTOR_LABELS = { mATX: "Micro ATX", ITX: "Mini ITX" };
 
 const PSU_FORM_FACTOR_OPTIONS = ["ATX", "SFX", "SFX-L"];
 
+const RADIATOR_SIZE_OPTIONS = ["120mm", "240mm", "280mm", "360mm"];
+
 export interface CategoryConfig {
 	id: Category;
 	label: string;
@@ -161,6 +163,12 @@ export const CATEGORIES: CategoryConfig[] = [
 				type: "tags",
 				options: PSU_FORM_FACTOR_OPTIONS,
 			},
+			{
+				key: "supportedRadiatorSizes",
+				label: "Tailles radiateur supportées",
+				type: "tags",
+				options: RADIATOR_SIZE_OPTIONS,
+			},
 		],
 	},
 	{
@@ -191,7 +199,7 @@ export const CATEGORIES: CategoryConfig[] = [
 				key: "radiatorSize",
 				label: "Taille radiateur",
 				type: "select",
-				options: ["120mm", "240mm", "280mm", "360mm"],
+				options: RADIATOR_SIZE_OPTIONS,
 				showIf: { key: "coolerType", equals: "AIO" },
 			},
 		],

@@ -83,8 +83,13 @@ export function OptionCard({
 						/>
 					)}
 					<div>
-						<div className="flex items-center gap-2">
-							<p className="font-medium text-slate-100">{option.name}</p>
+						<div className="flex items-start gap-2">
+							<p
+								className="line-clamp-2 font-medium text-slate-100"
+								title={option.name}
+							>
+								{option.name}
+							</p>
 							{option.purchased && (
 								<span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-xs font-semibold text-emerald-400">
 									Acheté
@@ -98,18 +103,6 @@ export function OptionCard({
 				</label>
 				<div className="ml-auto flex flex-col items-end gap-1.5">
 					<div className="flex items-center gap-1 text-slate-400">
-						<button
-							type="button"
-							onClick={onTogglePurchased}
-							className={`p-1.5 ${option.purchased ? "text-emerald-400" : "hover:text-emerald-400"}`}
-							title={
-								option.purchased
-									? "Marquer comme non acheté"
-									: "Marquer comme acheté"
-							}
-						>
-							<ShoppingCart size={16} />
-						</button>
 						{option.url && (
 							<a
 								href={option.url}
@@ -137,6 +130,19 @@ export function OptionCard({
 						>
 							<Copy size={16} />
 						</button>
+						<button
+							type="button"
+							onClick={onTogglePurchased}
+							className={`p-1.5 ${option.purchased ? "text-emerald-400" : "hover:text-emerald-400"}`}
+							title={
+								option.purchased
+									? "Marquer comme non acheté"
+									: "Marquer comme acheté"
+							}
+						>
+							<ShoppingCart size={16} />
+						</button>
+						<span className="mx-1 h-4 w-px bg-slate-700" />
 						<button
 							type="button"
 							onClick={() => {

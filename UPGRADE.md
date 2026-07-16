@@ -41,6 +41,6 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 ## Perso
 
-- [ ] Scrollview quand on clique sur la nav
-- [ ] Faire quelque chose quand les titres prennent 4 lignes, c'est bien trop
-- [ ] Améliore l'ordre des icones des cards pour améliorer l'ux
+- [x] Scrollview quand on clique sur la nav
+- [x] Faire quelque chose quand les titres prennent 4 lignes, c'est bien trop
+- [x] Améliore l'ordre des icones des cards pour améliorer l'ux

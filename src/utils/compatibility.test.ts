@@ -11,7 +11,7 @@ function getCheck(results: ReturnType<typeof checkCompatibility>, id: string) {
 describe("checkCompatibility", () => {
 	test("returns info for every check when nothing is selected", () => {
 		const results = checkCompatibility([]);
-		expect(results).toHaveLength(6);
+		expect(results).toHaveLength(8);
 		for (const check of results) {
 			expect(check.status).toBe("info");
 		}
@@ -196,6 +196,20 @@ describe("checkCompatibility", () => {
 				"info",
 			);
 		});
+
+		test("uses a custom safety margin when provided", () => {
+			const options = [
+				makeOption("cpu", { specs: { tdpWatts: 100 } }),
+				// required with 1.5 margin = ceil(100 * 1.5) = 150
+				makeOption("psu", { specs: { wattage: 140 } }),
+			];
+			expect(getCheck(checkCompatibility(options, 1.5), "wattage").status).toBe(
+				"warning",
+			);
+			expect(getCheck(checkCompatibility(options, 1.2), "wattage").status).toBe(
+				"ok",
+			);
+		});
 	});
 
 	describe("gpu length check", () => {
@@ -224,6 +238,74 @@ describe("checkCompatibility", () => {
 			expect(getCheck(checkCompatibility(options), "gpu-length").status).toBe(
 				"info",
 			);
+		});
+	});
+
+	describe("cooler height check", () => {
+		test("ok when the cooler fits in the case", () => {
+			const options = [
+				makeOption("cooler", { specs: { coolerHeightMm: 150 } }),
+				makeOption("case", { specs: { maxCoolerHeightMm: 160 } }),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "cooler-height").status,
+			).toBe("ok");
+		});
+
+		test("error when the cooler is taller than the case allows", () => {
+			const options = [
+				makeOption("cooler", { specs: { coolerHeightMm: 170 } }),
+				makeOption("case", { specs: { maxCoolerHeightMm: 160 } }),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "cooler-height").status,
+			).toBe("error");
+		});
+
+		test("info when no cooler is selected", () => {
+			const options = [
+				makeOption("case", { specs: { maxCoolerHeightMm: 160 } }),
+			];
+			expect(
+				getCheck(checkCompatibility(options), "cooler-height").status,
+			).toBe("info");
+		});
+	});
+
+	describe("vesa check", () => {
+		test("ok when the monitor and arm share a VESA format", () => {
+			const options = [
+				makeOption("monitor", { specs: { vesaFormat: ["100x100"] } }),
+				makeOption("monitor-arm", {
+					specs: { vesaFormat: ["75x75", "100x100"] },
+				}),
+			];
+			expect(getCheck(checkCompatibility(options), "vesa").status).toBe("ok");
+		});
+
+		test("error when the monitor and arm share no VESA format", () => {
+			const options = [
+				makeOption("monitor", { specs: { vesaFormat: ["200x200"] } }),
+				makeOption("monitor-arm", { specs: { vesaFormat: ["75x75"] } }),
+			];
+			expect(getCheck(checkCompatibility(options), "vesa").status).toBe(
+				"error",
+			);
+		});
+
+		test("matching is case-insensitive and trims whitespace", () => {
+			const options = [
+				makeOption("monitor", { specs: { vesaFormat: [" 100X100 "] } }),
+				makeOption("monitor-arm", { specs: { vesaFormat: ["100x100"] } }),
+			];
+			expect(getCheck(checkCompatibility(options), "vesa").status).toBe("ok");
+		});
+
+		test("info when no arm is selected", () => {
+			const options = [
+				makeOption("monitor", { specs: { vesaFormat: ["100x100"] } }),
+			];
+			expect(getCheck(checkCompatibility(options), "vesa").status).toBe("info");
 		});
 	});
 });

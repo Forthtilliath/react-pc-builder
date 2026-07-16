@@ -41,6 +41,8 @@ export interface ComponentSpecs {
 	maxRamCapacityGb?: number;
 	modulesCount?: number;
 	capacityGb?: number;
+	coolerHeightMm?: number;
+	maxCoolerHeightMm?: number;
 }
 
 export interface PricePoint {

@@ -12,6 +12,7 @@ import type {
 	ComponentOption,
 	NewComponentOption,
 } from "../types/component.ts";
+import { DEFAULT_PSU_SAFETY_MARGIN } from "../utils/compatibility.ts";
 import { getEffectivePrice } from "../utils/format.ts";
 import { migrateOptions } from "../utils/migrate-options.ts";
 
@@ -131,6 +132,8 @@ interface BuildContextValue {
 	replaceOptions: (options: ComponentOption[]) => void;
 	budget: number | null;
 	setBudget: (budget: number | null) => void;
+	psuSafetyMargin: number;
+	setPsuSafetyMargin: (margin: number) => void;
 }
 
 const BuildContext = createContext<BuildContextValue | null>(null);
@@ -144,6 +147,10 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 	const [budget, setBudget] = useLocalStorage<number | null>(
 		"pc-builder:budget",
 		null,
+	);
+	const [psuSafetyMargin, setPsuSafetyMargin] = useLocalStorage<number>(
+		"pc-builder:psu-safety-margin",
+		DEFAULT_PSU_SAFETY_MARGIN,
 	);
 
 	const dispatch = useCallback(
@@ -168,8 +175,18 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 			replaceOptions: setOptions,
 			budget,
 			setBudget,
+			psuSafetyMargin,
+			setPsuSafetyMargin,
 		}),
-		[options, dispatch, setOptions, budget, setBudget],
+		[
+			options,
+			dispatch,
+			setOptions,
+			budget,
+			setBudget,
+			psuSafetyMargin,
+			setPsuSafetyMargin,
+		],
 	);
 
 	return (

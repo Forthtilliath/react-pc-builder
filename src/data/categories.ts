@@ -119,12 +119,21 @@ export const CATEGORIES: CategoryConfig[] = [
 				type: "number",
 				unit: "mm",
 			},
+			{
+				key: "maxCoolerHeightMm",
+				label: "Hauteur ventirad max",
+				type: "number",
+				unit: "mm",
+			},
 		],
 	},
 	{
 		id: "cooler",
 		label: "Refroidissement",
-		specFields: [{ key: "socket", label: "Socket compatible", type: "text" }],
+		specFields: [
+			{ key: "socket", label: "Socket compatible", type: "text" },
+			{ key: "coolerHeightMm", label: "Hauteur", type: "number", unit: "mm" },
+		],
 	},
 	{
 		id: "keyboard",
@@ -172,6 +181,11 @@ export const CATEGORIES: CategoryConfig[] = [
 				label: "Dalle",
 				type: "select",
 				options: ["IPS", "VA", "TN", "OLED"],
+			},
+			{
+				key: "vesaFormat",
+				label: "Formats VESA",
+				type: "tags",
 			},
 		],
 	},

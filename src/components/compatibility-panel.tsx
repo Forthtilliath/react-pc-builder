@@ -16,12 +16,28 @@ const STATUS_STYLES: Record<
 };
 
 export function CompatibilityPanel() {
-	const { options } = useBuild();
-	const checks = checkCompatibility(options);
+	const { options, psuSafetyMargin, setPsuSafetyMargin } = useBuild();
+	const checks = checkCompatibility(options, psuSafetyMargin);
 
 	return (
 		<section className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-			<h2 className="text-lg font-semibold text-slate-100">Compatibilité</h2>
+			<div className="flex flex-wrap items-center justify-between gap-2">
+				<h2 className="text-lg font-semibold text-slate-100">Compatibilité</h2>
+				<label className="flex items-center gap-2 text-sm text-slate-400">
+					Marge de sécurité alimentation (%)
+					<input
+						type="number"
+						min="100"
+						step="5"
+						value={Math.round(psuSafetyMargin * 100)}
+						onChange={(e) => {
+							const percent = Number(e.target.value);
+							if (percent > 0) setPsuSafetyMargin(percent / 100);
+						}}
+						className="w-20 rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
+					/>
+				</label>
+			</div>
 			<ul className="mt-3 space-y-2">
 				{checks.map((check) => {
 					const { icon: Icon, className } = STATUS_STYLES[check.status];

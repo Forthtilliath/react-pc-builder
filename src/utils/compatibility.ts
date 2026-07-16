@@ -9,7 +9,7 @@ export interface CompatibilityCheck {
 	message: string;
 }
 
-const PSU_SAFETY_MARGIN = 1.2;
+export const DEFAULT_PSU_SAFETY_MARGIN = 1.2;
 
 function findSelected(
 	options: ComponentOption[],
@@ -197,6 +197,7 @@ function wattageCheck(
 	cpu: ComponentOption | undefined,
 	gpu: ComponentOption | undefined,
 	psu: ComponentOption | undefined,
+	safetyMargin: number,
 ): CompatibilityCheck {
 	const id = "wattage";
 	const label = "Puissance alimentation";
@@ -225,7 +226,7 @@ function wattageCheck(
 		};
 	}
 	const estimated = cpu.specs.tdpWatts + (gpu?.specs.tdpWatts ?? 0);
-	const required = Math.ceil(estimated * PSU_SAFETY_MARGIN);
+	const required = Math.ceil(estimated * safetyMargin);
 	if (psu.specs.wattage >= required) {
 		return {
 			id,
@@ -292,8 +293,110 @@ function gpuLengthCheck(
 	};
 }
 
+function coolerHeightCheck(
+	cooler: ComponentOption | undefined,
+	pcCase: ComponentOption | undefined,
+): CompatibilityCheck {
+	const id = "cooler-height";
+	const label = "Hauteur ventirad / boîtier";
+	if (!cooler) {
+		return {
+			id,
+			label,
+			status: "info",
+			message: "Aucun ventirad sélectionné.",
+		};
+	}
+	if (!pcCase) {
+		return {
+			id,
+			label,
+			status: "info",
+			message: "Sélectionne un boîtier pour vérifier.",
+		};
+	}
+	if (
+		cooler.specs.coolerHeightMm === undefined ||
+		pcCase.specs.maxCoolerHeightMm === undefined
+	) {
+		return {
+			id,
+			label,
+			status: "info",
+			message:
+				"Renseigne la hauteur du ventirad et la hauteur ventirad max du boîtier.",
+		};
+	}
+	if (cooler.specs.coolerHeightMm <= pcCase.specs.maxCoolerHeightMm) {
+		return {
+			id,
+			label,
+			status: "ok",
+			message: `Ventirad (${cooler.specs.coolerHeightMm} mm) tient dans le boîtier (max ${pcCase.specs.maxCoolerHeightMm} mm).`,
+		};
+	}
+	return {
+		id,
+		label,
+		status: "error",
+		message: `Ventirad (${cooler.specs.coolerHeightMm} mm) trop haut pour le boîtier (max ${pcCase.specs.maxCoolerHeightMm} mm).`,
+	};
+}
+
+function vesaCheck(
+	monitor: ComponentOption | undefined,
+	monitorArm: ComponentOption | undefined,
+): CompatibilityCheck {
+	const id = "vesa";
+	const label = "VESA écran / bras";
+	if (!monitor || !monitorArm) {
+		return {
+			id,
+			label,
+			status: "info",
+			message: "Sélectionne un écran et un bras d'écran pour vérifier.",
+		};
+	}
+	const monitorFormats = monitor.specs.vesaFormat;
+	const armFormats = monitorArm.specs.vesaFormat;
+	if (
+		!monitorFormats ||
+		monitorFormats.length === 0 ||
+		!armFormats ||
+		armFormats.length === 0
+	) {
+		return {
+			id,
+			label,
+			status: "info",
+			message: "Renseigne les formats VESA de l'écran et du bras.",
+		};
+	}
+	const normalizedMonitorFormats = monitorFormats.map((format) =>
+		format.trim().toLowerCase(),
+	);
+	const common = armFormats.filter((format) =>
+		normalizedMonitorFormats.includes(format.trim().toLowerCase()),
+	);
+	if (common.length > 0) {
+		return {
+			id,
+			label,
+			status: "ok",
+			message: `Format VESA compatible (${common.join(", ")}).`,
+		};
+	}
+	return {
+		id,
+		label,
+		status: "error",
+		message: `Aucun format VESA commun entre l'écran (${monitorFormats.join(", ")}) et le bras (${armFormats.join(", ")}).`,
+	};
+}
+
 export function checkCompatibility(
 	options: ComponentOption[],
+	psuSafetyMargin: number = DEFAULT_PSU_SAFETY_MARGIN,
 ): CompatibilityCheck[] {
 	const cpu = findSelected(options, "cpu");
 	const gpu = findSelected(options, "gpu");
@@ -301,13 +404,18 @@ export function checkCompatibility(
 	const ram = findSelected(options, "ram");
 	const psu = findSelected(options, "psu");
 	const pcCase = findSelected(options, "case");
+	const cooler = findSelected(options, "cooler");
+	const monitor = findSelected(options, "monitor");
+	const monitorArm = findSelected(options, "monitor-arm");
 
 	return [
 		socketCheck(cpu, motherboard),
 		ramTypeCheck(ram, motherboard),
 		ramCapacityCheck(ram, motherboard),
 		formFactorCheck(motherboard, pcCase),
-		wattageCheck(cpu, gpu, psu),
+		wattageCheck(cpu, gpu, psu, psuSafetyMargin),
 		gpuLengthCheck(gpu, pcCase),
+		coolerHeightCheck(cooler, pcCase),
+		vesaCheck(monitor, monitorArm),
 	];
 }

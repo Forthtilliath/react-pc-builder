@@ -47,6 +47,13 @@ export const CATEGORIES: CategoryConfig[] = [
 				type: "select",
 				options: ["ATX", "mATX", "ITX"],
 			},
+			{ key: "ramSlots", label: "Slots RAM", type: "number" },
+			{
+				key: "maxRamCapacityGb",
+				label: "Capacité RAM max",
+				type: "number",
+				unit: "Go",
+			},
 		],
 	},
 	{
@@ -58,6 +65,13 @@ export const CATEGORIES: CategoryConfig[] = [
 				label: "Type",
 				type: "select",
 				options: ["DDR4", "DDR5"],
+			},
+			{ key: "modulesCount", label: "Nombre de barrettes", type: "number" },
+			{
+				key: "capacityGb",
+				label: "Capacité totale",
+				type: "number",
+				unit: "Go",
 			},
 		],
 	},

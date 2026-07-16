@@ -11,7 +11,7 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 ## Compatibilité
 
-- [ ] **RAM ↔ carte mère** : vérifier le nombre de barrettes/capacité totale vs le nombre de slots et la capacité max supportée par la carte mère (aucun champ `ramSlots`/`maxRamCapacity` n'existe encore).
+- [x] **RAM ↔ carte mère** : vérifier le nombre de barrettes/capacité totale vs le nombre de slots et la capacité max supportée par la carte mère (aucun champ `ramSlots`/`maxRamCapacity` n'existe encore).
 - [ ] **Ventirad ↔ boîtier** : on a la longueur GPU max du boîtier, mais pas la hauteur max de ventirad (visible sur la fiche MSI Forge 100M : "CPU Cooler Length: up to 160mm"). Ajouter `coolerHeightMm` (refroidissement) et `maxCoolerHeightMm` (boîtier) permettrait un vrai check.
 - [ ] **VESA écran ↔ bras d'écran** : le bras a un champ `vesaFormat`, mais pas l'écran lui-même. Sans ce champ côté écran, impossible de vérifier réellement la compatibilité (aujourd'hui c'est juste déclaratif sur le bras).
 - [ ] **Marge de sécurité PSU configurable** : `PSU_SAFETY_MARGIN = 1.2` est en dur dans `compatibility.ts`. Pourrait devenir un réglage utilisateur (certains préfèrent une marge plus large).

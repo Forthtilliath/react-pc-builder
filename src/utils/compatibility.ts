@@ -99,6 +99,60 @@ function ramTypeCheck(
 	};
 }
 
+function ramCapacityCheck(
+	ram: ComponentOption | undefined,
+	motherboard: ComponentOption | undefined,
+): CompatibilityCheck {
+	const id = "ram-capacity";
+	const label = "Capacité / slots RAM";
+	if (!ram || !motherboard) {
+		return {
+			id,
+			label,
+			status: "info",
+			message: "Sélectionne une RAM et une carte mère pour vérifier.",
+		};
+	}
+	const { modulesCount, capacityGb } = ram.specs;
+	const { ramSlots, maxRamCapacityGb } = motherboard.specs;
+	if (
+		modulesCount === undefined ||
+		capacityGb === undefined ||
+		ramSlots === undefined ||
+		maxRamCapacityGb === undefined
+	) {
+		return {
+			id,
+			label,
+			status: "info",
+			message:
+				"Renseigne le nombre de barrettes/la capacité de la RAM et les slots/la capacité max de la carte mère.",
+		};
+	}
+	if (modulesCount > ramSlots) {
+		return {
+			id,
+			label,
+			status: "error",
+			message: `${modulesCount} barrettes ne tiennent pas dans les ${ramSlots} slots de la carte mère.`,
+		};
+	}
+	if (capacityGb > maxRamCapacityGb) {
+		return {
+			id,
+			label,
+			status: "error",
+			message: `${capacityGb} Go dépasse la capacité RAM max de la carte mère (${maxRamCapacityGb} Go).`,
+		};
+	}
+	return {
+		id,
+		label,
+		status: "ok",
+		message: `${modulesCount} barrette${modulesCount > 1 ? "s" : ""} (${capacityGb} Go) compatibles avec la carte mère.`,
+	};
+}
+
 function formFactorCheck(
 	motherboard: ComponentOption | undefined,
 	pcCase: ComponentOption | undefined,
@@ -251,6 +305,7 @@ export function checkCompatibility(
 	return [
 		socketCheck(cpu, motherboard),
 		ramTypeCheck(ram, motherboard),
+		ramCapacityCheck(ram, motherboard),
 		formFactorCheck(motherboard, pcCase),
 		wattageCheck(cpu, gpu, psu),
 		gpuLengthCheck(gpu, pcCase),

@@ -11,7 +11,7 @@ function getCheck(results: ReturnType<typeof checkCompatibility>, id: string) {
 describe("checkCompatibility", () => {
 	test("returns info for every check when nothing is selected", () => {
 		const results = checkCompatibility([]);
-		expect(results).toHaveLength(5);
+		expect(results).toHaveLength(6);
 		for (const check of results) {
 			expect(check.status).toBe("info");
 		}
@@ -73,6 +73,54 @@ describe("checkCompatibility", () => {
 			];
 			expect(getCheck(checkCompatibility(options), "ram-type").status).toBe(
 				"error",
+			);
+		});
+	});
+
+	describe("ram capacity check", () => {
+		test("ok when modules and capacity fit within the motherboard's limits", () => {
+			const options = [
+				makeOption("ram", { specs: { modulesCount: 2, capacityGb: 32 } }),
+				makeOption("motherboard", {
+					specs: { ramSlots: 4, maxRamCapacityGb: 128 },
+				}),
+			];
+			expect(getCheck(checkCompatibility(options), "ram-capacity").status).toBe(
+				"ok",
+			);
+		});
+
+		test("error when there are more modules than slots", () => {
+			const options = [
+				makeOption("ram", { specs: { modulesCount: 4, capacityGb: 64 } }),
+				makeOption("motherboard", {
+					specs: { ramSlots: 2, maxRamCapacityGb: 128 },
+				}),
+			];
+			expect(getCheck(checkCompatibility(options), "ram-capacity").status).toBe(
+				"error",
+			);
+		});
+
+		test("error when total capacity exceeds the motherboard's max", () => {
+			const options = [
+				makeOption("ram", { specs: { modulesCount: 2, capacityGb: 128 } }),
+				makeOption("motherboard", {
+					specs: { ramSlots: 4, maxRamCapacityGb: 64 },
+				}),
+			];
+			expect(getCheck(checkCompatibility(options), "ram-capacity").status).toBe(
+				"error",
+			);
+		});
+
+		test("info when the relevant specs are missing", () => {
+			const options = [
+				makeOption("ram", { specs: {} }),
+				makeOption("motherboard", { specs: { ramSlots: 4 } }),
+			];
+			expect(getCheck(checkCompatibility(options), "ram-capacity").status).toBe(
+				"info",
 			);
 		});
 	});

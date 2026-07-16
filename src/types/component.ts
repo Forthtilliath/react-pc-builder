@@ -37,6 +37,10 @@ export interface ComponentSpecs {
 	connectorType?: string[];
 	accessoryType?: string;
 	storageType?: "NVMe M.2" | "SATA SSD" | "HDD";
+	ramSlots?: number;
+	maxRamCapacityGb?: number;
+	modulesCount?: number;
+	capacityGb?: number;
 }
 
 export interface PricePoint {

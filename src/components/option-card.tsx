@@ -29,11 +29,16 @@ interface OptionCardProps {
 	onTogglePurchased: () => void;
 }
 
-function formatSpecValue(value: unknown, unit: string | undefined): string {
-	if (Array.isArray(value)) return value.join(", ");
+function formatSpecValue(
+	value: unknown,
+	unit: string | undefined,
+	optionLabels: Record<string, string> | undefined,
+): string {
+	const label = (raw: string) => optionLabels?.[raw] ?? raw;
+	if (Array.isArray(value)) return value.map(label).join(", ");
 	if (typeof value === "number")
 		return unit ? `${value}${unit}` : String(value);
-	return String(value);
+	return label(String(value));
 }
 
 export function OptionCard({
@@ -220,7 +225,8 @@ export function OptionCard({
 									key={field.key}
 									className="rounded bg-sky-500/15 px-1.5 py-0.5 text-xs text-sky-300"
 								>
-									{field.label} : {formatSpecValue(value, field.unit)}
+									{field.label} :{" "}
+									{formatSpecValue(value, field.unit, field.optionLabels)}
 								</span>
 							);
 						})}

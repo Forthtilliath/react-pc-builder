@@ -9,6 +9,7 @@ import type {
 	ComponentSpecs,
 	NewComponentOption,
 } from "../types/component.ts";
+import { MultiSelect } from "./multi-select.tsx";
 
 interface OptionFormProps {
 	category: CategoryConfig;
@@ -175,33 +176,17 @@ export function OptionForm({
 							return (
 								<div key={field.key} className="text-sm text-slate-300">
 									{field.label}
-									<div className="mt-1 flex flex-wrap gap-2">
-										{field.options.map((opt) => {
-											const checked = selectedValues.includes(opt);
-											return (
-												<label
-													key={opt}
-													className="flex items-center gap-1.5 rounded border border-slate-600 bg-slate-900 px-2 py-1 text-sm text-slate-200"
-												>
-													<input
-														type="checkbox"
-														checked={checked}
-														onChange={() => {
-															const next = checked
-																? selectedValues.filter((v) => v !== opt)
-																: [...selectedValues, opt];
-															setSpecValues((prev) => ({
-																...prev,
-																[field.key]: next.join(", "),
-															}));
-														}}
-														className="accent-emerald-500"
-													/>
-													{opt}
-												</label>
-											);
-										})}
-									</div>
+									<MultiSelect
+										options={field.options}
+										selected={selectedValues}
+										optionLabels={field.optionLabels}
+										onChange={(values) =>
+											setSpecValues((prev) => ({
+												...prev,
+												[field.key]: values.join(", "),
+											}))
+										}
+									/>
 								</div>
 							);
 						}
@@ -229,28 +214,40 @@ export function OptionForm({
 										<option value="">-</option>
 										{field.options?.map((opt) => (
 											<option key={opt} value={opt}>
-												{opt}
+												{field.optionLabels?.[opt] ?? opt}
 											</option>
 										))}
 									</select>
 								) : (
-									<input
-										id={fieldId}
-										type={field.type === "number" ? "number" : "text"}
-										value={specValues[field.key] ?? ""}
-										onChange={(e) =>
-											setSpecValues((prev) => ({
-												...prev,
-												[field.key]: e.target.value,
-											}))
-										}
-										placeholder={
-											field.type === "tags"
-												? "Séparés par une virgule"
-												: undefined
-										}
-										className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
-									/>
+									<>
+										<input
+											id={fieldId}
+											type={field.type === "number" ? "number" : "text"}
+											value={specValues[field.key] ?? ""}
+											onChange={(e) =>
+												setSpecValues((prev) => ({
+													...prev,
+													[field.key]: e.target.value,
+												}))
+											}
+											placeholder={
+												field.type === "tags"
+													? "Séparés par une virgule"
+													: undefined
+											}
+											list={
+												field.suggestions ? `${fieldId}-suggestions` : undefined
+											}
+											className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
+										/>
+										{field.suggestions && (
+											<datalist id={`${fieldId}-suggestions`}>
+												{field.suggestions.map((suggestion) => (
+													<option key={suggestion} value={suggestion} />
+												))}
+											</datalist>
+										)}
+									</>
 								)}
 							</label>
 						);

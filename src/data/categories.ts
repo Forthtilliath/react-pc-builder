@@ -9,8 +9,15 @@ export interface SpecFieldConfig {
 	label: string;
 	type: SpecFieldType;
 	options?: string[];
+	optionLabels?: Record<string, string>;
 	unit?: string;
+	suggestions?: string[];
 }
+
+const SOCKET_SUGGESTIONS = ["AM4", "AM5"];
+
+const FORM_FACTOR_OPTIONS = ["ATX", "mATX", "ITX", "E-ATX"];
+const FORM_FACTOR_LABELS = { mATX: "Micro ATX", ITX: "Mini ITX" };
 
 export interface CategoryConfig {
 	id: Category;
@@ -26,7 +33,12 @@ export const CATEGORIES: CategoryConfig[] = [
 		id: "cpu",
 		label: "Processeur (CPU)",
 		specFields: [
-			{ key: "socket", label: "Socket", type: "text" },
+			{
+				key: "socket",
+				label: "Socket",
+				type: "text",
+				suggestions: SOCKET_SUGGESTIONS,
+			},
 			{ key: "tdpWatts", label: "TDP", type: "number", unit: "W" },
 		],
 	},
@@ -34,7 +46,12 @@ export const CATEGORIES: CategoryConfig[] = [
 		id: "motherboard",
 		label: "Carte mère",
 		specFields: [
-			{ key: "socket", label: "Socket", type: "text" },
+			{
+				key: "socket",
+				label: "Socket",
+				type: "text",
+				suggestions: SOCKET_SUGGESTIONS,
+			},
 			{
 				key: "ramType",
 				label: "Type de RAM supporté",
@@ -45,7 +62,8 @@ export const CATEGORIES: CategoryConfig[] = [
 				key: "formFactor",
 				label: "Format",
 				type: "select",
-				options: ["ATX", "mATX", "ITX", "E-ATX"],
+				options: FORM_FACTOR_OPTIONS,
+				optionLabels: FORM_FACTOR_LABELS,
 			},
 			{ key: "ramSlots", label: "Slots RAM", type: "number" },
 			{
@@ -95,6 +113,7 @@ export const CATEGORIES: CategoryConfig[] = [
 				type: "select",
 				options: ["NVMe M.2", "SATA SSD", "HDD"],
 			},
+			{ key: "capacityGb", label: "Capacité", type: "number", unit: "Go" },
 		],
 	},
 	{
@@ -112,7 +131,8 @@ export const CATEGORIES: CategoryConfig[] = [
 				key: "supportedFormFactors",
 				label: "Formats supportés",
 				type: "tags",
-				options: ["ATX", "mATX", "ITX", "E-ATX"],
+				options: FORM_FACTOR_OPTIONS,
+				optionLabels: FORM_FACTOR_LABELS,
 			},
 			{
 				key: "maxGpuLengthMm",
@@ -132,7 +152,12 @@ export const CATEGORIES: CategoryConfig[] = [
 		id: "cooler",
 		label: "Refroidissement",
 		specFields: [
-			{ key: "socket", label: "Socket compatible", type: "text" },
+			{
+				key: "socket",
+				label: "Socket compatible",
+				type: "text",
+				suggestions: SOCKET_SUGGESTIONS,
+			},
 			{ key: "coolerHeightMm", label: "Hauteur", type: "number", unit: "mm" },
 		],
 	},

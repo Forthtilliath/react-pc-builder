@@ -14,5 +14,5 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 
 ## Qualité de code
 
-- [ ] **Tests de composants** : les tests actuels couvrent la logique pure (`compatibility.ts`, le reducer, les migrations) mais rien sur le rendu réel — la sélection multi-groupe dans l'UI, le formulaire, le tri/filtre. Ajouter `@testing-library/react` + un environnement DOM permettrait de couvrir ces interactions.
-- [ ] **Accessibilité de la modale Résumé** : pas de piège de focus ni de fermeture au clavier (Échap) actuellement sur `BuildSummary`.
+- [x] **Tests de composants** : les tests actuels couvrent la logique pure (`compatibility.ts`, le reducer, les migrations) mais rien sur le rendu réel — la sélection multi-groupe dans l'UI, le formulaire, le tri/filtre. Ajouter `@testing-library/react` + un environnement DOM permettrait de couvrir ces interactions.
+- [x] **Accessibilité de la modale Résumé** : pas de piège de focus ni de fermeture au clavier (Échap) actuellement sur `BuildSummary`.

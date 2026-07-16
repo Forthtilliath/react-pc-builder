@@ -1,4 +1,5 @@
 import { Printer, X } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { useBuild } from "../context/build-context.tsx";
 import { CATEGORIES } from "../data/categories.ts";
 import { formatPrice, getEffectivePrice } from "../utils/format.ts";
@@ -7,8 +8,12 @@ interface BuildSummaryProps {
 	onClose: () => void;
 }
 
+const FOCUSABLE_SELECTOR =
+	'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 export function BuildSummary({ onClose }: BuildSummaryProps) {
 	const { options } = useBuild();
+	const containerRef = useRef<HTMLDivElement>(null);
 	const selected = options.filter((o) => o.selected);
 	const total = selected.reduce((sum, o) => sum + getEffectivePrice(o), 0);
 	const groups = CATEGORIES.map((category) => ({
@@ -16,9 +21,44 @@ export function BuildSummary({ onClose }: BuildSummaryProps) {
 		items: selected.filter((o) => o.category === category.id),
 	})).filter((group) => group.items.length > 0);
 
+	useEffect(() => {
+		containerRef.current?.focus();
+
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.key === "Escape") {
+				onClose();
+				return;
+			}
+			const container = containerRef.current;
+			if (event.key !== "Tab" || !container) return;
+			const focusable =
+				container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+			if (focusable.length === 0) return;
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
+			if (event.shiftKey && document.activeElement === first) {
+				event.preventDefault();
+				last.focus();
+			} else if (!event.shiftKey && document.activeElement === last) {
+				event.preventDefault();
+				first.focus();
+			}
+		}
+
+		document.addEventListener("keydown", handleKeyDown);
+		return () => document.removeEventListener("keydown", handleKeyDown);
+	}, [onClose]);
+
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 print:relative print:bg-white print:p-0">
-			<div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-slate-800 bg-slate-900 p-6 print:max-h-none print:w-full print:max-w-none print:overflow-visible print:border-0 print:bg-white print:text-black">
+			<div
+				ref={containerRef}
+				role="dialog"
+				aria-modal="true"
+				aria-label="Résumé de la configuration"
+				tabIndex={-1}
+				className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-slate-800 bg-slate-900 p-6 outline-none print:max-h-none print:w-full print:max-w-none print:overflow-visible print:border-0 print:bg-white print:text-black"
+			>
 				<div className="flex items-center justify-between print:hidden">
 					<h2 className="text-xl font-bold text-slate-100">
 						Résumé de la configuration

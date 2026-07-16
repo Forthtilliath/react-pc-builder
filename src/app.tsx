@@ -1,3 +1,6 @@
+import { FileText } from "lucide-react";
+import { useState } from "react";
+import { BuildSummary } from "./components/build-summary.tsx";
 import { CategoryNav } from "./components/category-nav.tsx";
 import { CategorySection } from "./components/category-section.tsx";
 import { CompatibilityPanel } from "./components/compatibility-panel.tsx";
@@ -9,6 +12,8 @@ import { CATEGORIES } from "./data/categories.ts";
 import "./index.css";
 
 export function App() {
+	const [showSummary, setShowSummary] = useState(false);
+
 	return (
 		<ToastProvider>
 			<BuildProvider>
@@ -22,7 +27,17 @@ export function App() {
 									garde le total à jour et vérifie la compatibilité.
 								</p>
 							</div>
-							<DataBackup />
+							<div className="flex gap-2">
+								<button
+									type="button"
+									onClick={() => setShowSummary(true)}
+									className="flex items-center gap-1 rounded bg-slate-800 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-700"
+								>
+									<FileText size={16} />
+									Résumé
+								</button>
+								<DataBackup />
+							</div>
 						</header>
 
 						<TotalBar />
@@ -38,6 +53,7 @@ export function App() {
 						</div>
 					</div>
 				</div>
+				{showSummary && <BuildSummary onClose={() => setShowSummary(false)} />}
 			</BuildProvider>
 		</ToastProvider>
 	);

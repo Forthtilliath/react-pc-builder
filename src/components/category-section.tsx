@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { useBuild } from "../context/build-context.tsx";
 import { useToast } from "../context/toast-context.tsx";
@@ -24,6 +24,11 @@ export function CategorySection({ category }: CategorySectionProps) {
 	const { notify } = useToast();
 	const [isAdding, setIsAdding] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null);
+	const [search, setSearch] = useState("");
+	const [selectedOnly, setSelectedOnly] = useState(false);
+	const [sortBy, setSortBy] = useState<"default" | "price-asc" | "price-desc">(
+		"default",
+	);
 
 	const categoryOptions = options.filter((o) => o.category === category.id);
 	const selectedOptions = categoryOptions.filter((o) => o.selected);
@@ -35,10 +40,24 @@ export function CategorySection({ category }: CategorySectionProps) {
 		? categoryOptions.find((o) => o.id === editingId)
 		: undefined;
 
+	const normalizedSearch = search.trim().toLowerCase();
+	const visibleOptions = categoryOptions
+		.filter((o) => !selectedOnly || o.selected)
+		.filter((o) => o.name.toLowerCase().includes(normalizedSearch))
+		.sort((a, b) => {
+			if (sortBy === "price-asc") {
+				return getEffectivePrice(a) - getEffectivePrice(b);
+			}
+			if (sortBy === "price-desc") {
+				return getEffectivePrice(b) - getEffectivePrice(a);
+			}
+			return 0;
+		});
+
 	const groups: Map<string, ComponentOption[]> | null =
 		category.allowMultipleSelected ? new Map() : null;
 	if (groups) {
-		for (const option of categoryOptions) {
+		for (const option of visibleOptions) {
 			const rawValue = category.groupByField
 				? option.specs[category.groupByField]
 				: undefined;
@@ -121,6 +140,46 @@ export function CategorySection({ category }: CategorySectionProps) {
 				</button>
 			</div>
 
+			{categoryOptions.length > 1 && (
+				<div className="mt-3 flex flex-wrap items-center gap-2">
+					<div className="relative">
+						<Search
+							size={14}
+							className="pointer-events-none absolute top-1/2 left-2 -translate-y-1/2 text-slate-500"
+						/>
+						<input
+							type="text"
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+							placeholder="Rechercher..."
+							className="w-40 rounded border border-slate-600 bg-slate-900 py-1 pr-2 pl-7 text-sm text-slate-100"
+						/>
+					</div>
+					<select
+						value={sortBy}
+						onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+						className="rounded border border-slate-600 bg-slate-900 px-2 py-1 text-sm text-slate-100"
+					>
+						<option value="default">Trier par...</option>
+						<option value="price-asc">Prix croissant</option>
+						<option value="price-desc">Prix décroissant</option>
+					</select>
+					<label className="flex items-center gap-1.5 text-sm text-slate-400">
+						<input
+							type="checkbox"
+							checked={selectedOnly}
+							onChange={(e) => setSelectedOnly(e.target.checked)}
+							className="accent-emerald-500"
+						/>
+						Sélectionné uniquement
+					</label>
+				</div>
+			)}
+
+			{categoryOptions.length > 0 && visibleOptions.length === 0 && (
+				<p className="mt-3 text-sm text-slate-500">Aucun résultat.</p>
+			)}
+
 			{groups ? (
 				<div className="mt-4 space-y-4">
 					{[...groups.entries()].map(([groupLabel, groupOptions]) => (
@@ -135,9 +194,9 @@ export function CategorySection({ category }: CategorySectionProps) {
 					))}
 				</div>
 			) : (
-				categoryOptions.length > 0 && (
+				visibleOptions.length > 0 && (
 					<div className="mt-4 space-y-3">
-						{categoryOptions.map((option) => renderOption(option))}
+						{visibleOptions.map((option) => renderOption(option))}
 					</div>
 				)
 			)}

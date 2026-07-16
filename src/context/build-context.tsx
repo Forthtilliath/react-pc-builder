@@ -19,6 +19,7 @@ import type {
 import { DEFAULT_PSU_SAFETY_MARGIN } from "../utils/compatibility.ts";
 import { getEffectivePrice } from "../utils/format.ts";
 import { migrateOptions } from "../utils/migrate-options.ts";
+import { sanitizeOptions } from "../utils/sanitize-options.ts";
 
 export type Action =
 	| {
@@ -153,7 +154,7 @@ export function BuildProvider({ children }: { children: ReactNode }) {
 	const [options, setOptions] = useLocalStorage<ComponentOption[]>(
 		"pc-builder:options",
 		[],
-		migrateOptions,
+		(parsed) => sanitizeOptions(migrateOptions(parsed)),
 	);
 	const [budget, setBudget] = useLocalStorage<number | null>(
 		"pc-builder:budget",

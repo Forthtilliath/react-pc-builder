@@ -1,8 +1,10 @@
 import { Download, Upload } from "lucide-react";
 import { type ChangeEvent, useRef } from "react";
 import { useBuild } from "../context/build-context.tsx";
+import { useToast } from "../context/toast-context.tsx";
 import type { ComponentOption } from "../types/component.ts";
 import { migrateOptions } from "../utils/migrate-options.ts";
+import { sanitizeOptions } from "../utils/sanitize-options.ts";
 
 interface BackupPayload {
 	exportedAt: string;
@@ -13,11 +15,17 @@ interface BackupPayload {
 function isBackupPayload(value: unknown): value is BackupPayload {
 	if (!value || typeof value !== "object") return false;
 	const payload = value as Partial<BackupPayload>;
-	return Array.isArray(payload.options);
+	if (!Array.isArray(payload.options)) return false;
+	return (
+		payload.budget === null ||
+		payload.budget === undefined ||
+		typeof payload.budget === "number"
+	);
 }
 
 export function DataBackup() {
 	const { options, budget, replaceOptions, setBudget } = useBuild();
+	const { notify } = useToast();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	function handleExport() {
@@ -57,14 +65,20 @@ export function DataBackup() {
 			return;
 		}
 
-		const migratedOptions = migrateOptions(parsed.options);
+		const sanitizedOptions = sanitizeOptions(migrateOptions(parsed.options));
+		const skipped = parsed.options.length - sanitizedOptions.length;
 		const confirmed = window.confirm(
-			`Importer ${migratedOptions.length} composant(s) ? Cela remplacera la configuration actuelle.`,
+			`Importer ${sanitizedOptions.length} composant(s) ? Cela remplacera la configuration actuelle.`,
 		);
 		if (!confirmed) return;
 
-		replaceOptions(migratedOptions);
+		replaceOptions(sanitizedOptions);
 		setBudget(parsed.budget ?? null);
+		if (skipped > 0) {
+			notify(
+				`${skipped} composant${skipped > 1 ? "s" : ""} ignoré${skipped > 1 ? "s" : ""} car invalide${skipped > 1 ? "s" : ""}`,
+			);
+		}
 	}
 
 	return (

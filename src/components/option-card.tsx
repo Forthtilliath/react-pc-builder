@@ -15,6 +15,7 @@ import {
 	formatPrice,
 	getDiscountPercent,
 	getEffectivePrice,
+	getSiteName,
 } from "../utils/format.ts";
 
 interface OptionCardProps {
@@ -28,9 +29,10 @@ interface OptionCardProps {
 	onTogglePurchased: () => void;
 }
 
-function formatSpecValue(value: unknown): string {
-	if (value === undefined || value === null || value === "") return "-";
+function formatSpecValue(value: unknown, unit: string | undefined): string {
 	if (Array.isArray(value)) return value.join(", ");
+	if (typeof value === "number")
+		return unit ? `${value}${unit}` : String(value);
 	return String(value);
 }
 
@@ -55,6 +57,7 @@ export function OptionCard({
 	);
 	const isAboveLowest =
 		lowestPoint !== null && effectivePrice > lowestPoint.price;
+	const siteName = getSiteName(option.url);
 
 	return (
 		<div
@@ -64,7 +67,7 @@ export function OptionCard({
 					: "border-slate-700 bg-slate-800/50"
 			}`}
 		>
-			<div className="flex items-start justify-between gap-3">
+			<div className="flex flex-wrap items-start justify-between gap-3">
 				<label className="flex items-start gap-3 cursor-pointer">
 					<input
 						type={multiple ? "checkbox" : "radio"}
@@ -93,7 +96,7 @@ export function OptionCard({
 						</p>
 					</div>
 				</label>
-				<div className="flex flex-col items-end gap-1.5">
+				<div className="ml-auto flex flex-col items-end gap-1.5">
 					<div className="flex items-center gap-1 text-slate-400">
 						<button
 							type="button"
@@ -198,17 +201,30 @@ export function OptionCard({
 					)}
 				</div>
 			)}
-			{specFields.length > 0 && (
-				<dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-400 sm:grid-cols-3">
-					{specFields.map((field) => (
-						<div key={field.key}>
-							<dt className="inline text-slate-500">{field.label}: </dt>
-							<dd className="inline">
-								{formatSpecValue(option.specs[field.key])}
-							</dd>
-						</div>
-					))}
-				</dl>
+			{(specFields.length > 0 || siteName) && (
+				<div className="mt-3 flex flex-wrap items-start justify-between gap-2">
+					<div className="flex flex-wrap gap-1.5">
+						{specFields.map((field) => {
+							const value = option.specs[field.key];
+							if (value === undefined || value === null || value === "") {
+								return null;
+							}
+							return (
+								<span
+									key={field.key}
+									className="rounded bg-sky-500/15 px-1.5 py-0.5 text-xs text-sky-300"
+								>
+									{field.label} : {formatSpecValue(value, field.unit)}
+								</span>
+							);
+						})}
+					</div>
+					{siteName && (
+						<span className="rounded bg-slate-700/50 px-1.5 py-0.5 text-xs text-slate-400">
+							{siteName}
+						</span>
+					)}
+				</div>
 			)}
 			{option.notes && (
 				<p className="mt-2 text-xs text-slate-500 italic">{option.notes}</p>

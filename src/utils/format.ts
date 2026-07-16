@@ -26,3 +26,13 @@ export function getEffectivePrice(option: {
 }): number {
 	return option.salePrice ?? option.price;
 }
+
+export function getSiteName(url: string | undefined): string | null {
+	if (!url) return null;
+	try {
+		const labels = new URL(url).hostname.split(".");
+		return labels.slice(-2).join(".");
+	} catch {
+		return null;
+	}
+}

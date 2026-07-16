@@ -108,7 +108,7 @@ export function OptionForm({
 		>
 			<div className="grid gap-3 sm:grid-cols-2">
 				<label className="text-sm text-slate-300">
-					<span className="block min-h-10">Nom</span>
+					Nom
 					<input
 						required
 						value={name}
@@ -117,7 +117,7 @@ export function OptionForm({
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
-					<span className="block min-h-10">Lien</span>
+					Lien
 					<input
 						type="url"
 						value={url}
@@ -127,7 +127,7 @@ export function OptionForm({
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
-					<span className="block min-h-10">Prix (€)</span>
+					Prix (€)
 					<input
 						required
 						type="number"
@@ -139,21 +139,19 @@ export function OptionForm({
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
-					<span className="block min-h-10">
-						Prix soldé (€){" "}
-						<span className="text-slate-500">— si promo en cours</span>
-					</span>
+					Prix soldé (€)
 					<input
 						type="number"
 						min="0"
 						step="0.01"
 						value={salePrice}
 						onChange={(e) => setSalePrice(e.target.value)}
+						placeholder="si promo en cours"
 						className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
 					/>
 				</label>
 				<label className="text-sm text-slate-300">
-					<span className="block min-h-10">URL de l'image</span>
+					URL de l'image
 					<input
 						type="url"
 						value={imageUrl}
@@ -174,7 +172,8 @@ export function OptionForm({
 								htmlFor={fieldId}
 								className="text-sm text-slate-300"
 							>
-								<span className="block min-h-10">{field.label}</span>
+								{field.label}
+								{field.unit ? ` (${field.unit})` : ""}
 								{field.type === "select" ? (
 									<select
 										id={fieldId}
@@ -204,6 +203,11 @@ export function OptionForm({
 												...prev,
 												[field.key]: e.target.value,
 											}))
+										}
+										placeholder={
+											field.type === "tags"
+												? "Séparés par une virgule"
+												: undefined
 										}
 										className="mt-1 w-full rounded border border-slate-600 bg-slate-900 px-2 py-1 text-slate-100"
 									/>

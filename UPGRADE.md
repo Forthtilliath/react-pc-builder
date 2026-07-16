@@ -38,3 +38,9 @@ Liste des améliorations possibles identifiées en relisant le code actuel. Rien
 ## Confort d'usage
 
 - [ ] **Import rapide depuis une fiche produit** : coller une URL ou un texte de fiche produit (Amazon, LDLC, etc.) et préremplir automatiquement nom/prix/specs. Gros gain de temps vu le nombre de composants déjà saisis à la main, mais nécessiterait soit un parsing fragile, soit une aide manuelle (comme on l'a fait dans cette conversation).
+
+## Perso
+
+- [ ] Scrollview quand on clique sur la nav
+- [ ] Faire quelque chose quand les titres prennent 4 lignes, c'est bien trop
+- [ ] Améliore l'ordre des icones des cards pour améliorer l'ux

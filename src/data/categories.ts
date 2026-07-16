@@ -9,6 +9,7 @@ export interface SpecFieldConfig {
 	label: string;
 	type: SpecFieldType;
 	options?: string[];
+	unit?: string;
 }
 
 export interface CategoryConfig {
@@ -26,7 +27,7 @@ export const CATEGORIES: CategoryConfig[] = [
 		label: "Processeur (CPU)",
 		specFields: [
 			{ key: "socket", label: "Socket", type: "text" },
-			{ key: "tdpWatts", label: "TDP (W)", type: "number" },
+			{ key: "tdpWatts", label: "TDP", type: "number", unit: "W" },
 		],
 	},
 	{
@@ -64,8 +65,8 @@ export const CATEGORIES: CategoryConfig[] = [
 		id: "gpu",
 		label: "Carte graphique (GPU)",
 		specFields: [
-			{ key: "tdpWatts", label: "TDP (W)", type: "number" },
-			{ key: "lengthMm", label: "Longueur (mm)", type: "number" },
+			{ key: "tdpWatts", label: "TDP", type: "number", unit: "W" },
+			{ key: "lengthMm", label: "Longueur", type: "number", unit: "mm" },
 		],
 	},
 	{
@@ -85,7 +86,9 @@ export const CATEGORIES: CategoryConfig[] = [
 	{
 		id: "psu",
 		label: "Alimentation",
-		specFields: [{ key: "wattage", label: "Puissance (W)", type: "number" }],
+		specFields: [
+			{ key: "wattage", label: "Puissance", type: "number", unit: "W" },
+		],
 	},
 	{
 		id: "case",
@@ -93,13 +96,14 @@ export const CATEGORIES: CategoryConfig[] = [
 		specFields: [
 			{
 				key: "supportedFormFactors",
-				label: "Formats supportés (séparés par une virgule)",
+				label: "Formats supportés",
 				type: "tags",
 			},
 			{
 				key: "maxGpuLengthMm",
-				label: "Longueur GPU max (mm)",
+				label: "Longueur GPU max",
 				type: "number",
+				unit: "mm",
 			},
 		],
 	},
@@ -146,9 +150,9 @@ export const CATEGORIES: CategoryConfig[] = [
 		label: "Écran",
 		optional: true,
 		specFields: [
-			{ key: "sizeInches", label: "Taille (pouces)", type: "number" },
+			{ key: "sizeInches", label: "Taille", type: "number", unit: "po" },
 			{ key: "resolution", label: "Résolution", type: "text" },
-			{ key: "refreshRateHz", label: "Fréquence (Hz)", type: "number" },
+			{ key: "refreshRateHz", label: "Fréquence", type: "number", unit: "Hz" },
 			{
 				key: "panelType",
 				label: "Dalle",
@@ -164,10 +168,15 @@ export const CATEGORIES: CategoryConfig[] = [
 		specFields: [
 			{
 				key: "vesaFormat",
-				label: "Formats VESA (séparés par une virgule)",
+				label: "Formats VESA",
 				type: "tags",
 			},
-			{ key: "maxWeightKg", label: "Poids max (kg)", type: "number" },
+			{
+				key: "maxWeightKg",
+				label: "Poids max",
+				type: "number",
+				unit: "kg",
+			},
 		],
 	},
 	{
@@ -178,7 +187,7 @@ export const CATEGORIES: CategoryConfig[] = [
 			{ key: "portsCount", label: "Nombre d'écrans supportés", type: "number" },
 			{
 				key: "connectorType",
-				label: "Connecteurs (séparés par une virgule)",
+				label: "Connecteurs",
 				type: "tags",
 			},
 			{ key: "maxResolution", label: "Résolution max", type: "text" },

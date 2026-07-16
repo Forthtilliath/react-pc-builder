@@ -95,7 +95,7 @@ export function CategorySection({ category }: CategorySectionProps) {
 			id={category.id}
 			className="scroll-mt-24 rounded-xl border border-slate-800 bg-slate-900/60 p-4"
 		>
-			<div className="flex items-center justify-between">
+			<div className="flex flex-wrap items-center justify-between gap-2">
 				<div>
 					<h2 className="text-lg font-semibold text-slate-100">
 						{category.label}

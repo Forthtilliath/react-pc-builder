@@ -27,15 +27,18 @@ export function CategoryNav() {
 			<p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
 				Composants
 			</p>
-			<ul className="space-y-1 border-l border-slate-800">
+			<ul className="space-y-1 border-l-2 border-slate-800">
 				{CATEGORIES.map((category) => (
-					<li key={category.id}>
+					<li key={category.id} className="relative">
+						{activeId === category.id && (
+							<span className="-left-0.5 absolute top-0 h-full w-0.5 bg-emerald-400" />
+						)}
 						<a
 							href={`#${category.id}`}
-							className={`block border-l-2 py-1 pl-3 text-sm transition-colors ${
+							className={`block py-1 pl-3 text-sm transition-colors ${
 								activeId === category.id
-									? "border-emerald-400 text-emerald-400"
-									: "border-transparent text-slate-400 hover:text-slate-200"
+									? "text-emerald-400"
+									: "text-slate-400 hover:text-slate-200"
 							}`}
 						>
 							{category.label}
